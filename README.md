@@ -8,9 +8,9 @@
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-green.svg)](https://www.python.org)
 [![GitHub stars](https://img.shields.io/github/stars/ythx-101/x-tweet-fetcher?style=social)](https://github.com/ythx-101/x-tweet-fetcher)
 
-*Four backends · Auto fallback · Unified JSON schema · Built for AI agents*
+*Five backends · Auto fallback · Unified JSON schema · Built for AI agents*
 
-[Quick Start](#-quick-start) · [Backends](#-four-backends) · [Capabilities](#-capabilities) · [Python API](#-python-api) · [Self-hosted Nitter](#-self-hosted-nitter) · [GitHub Actions](#-github-actions) · [Migrating from v1](#-migrating-from-v1)
+[Quick Start](#-quick-start) · [Backends](#-five-backends) · [Capabilities](#-capabilities) · [Python API](#-python-api) · [Self-hosted Nitter](#-self-hosted-nitter) · [GitHub Actions](#-github-actions) · [Migrating from v1](#-migrating-from-v1)
 
 </div>
 
@@ -27,7 +27,7 @@ You: ...seriously?
 
 X has no free API. Scraping gets you blocked. Browser automation is fragile in headless environments.
 
-**x-tweet-fetcher** solves this with **smart backend routing**: FxTwitter for single tweets (zero deps), X's own public syndication endpoint for user timelines (zero deps, no Nitter needed), Nitter for search and replies (direct HTTP), a browser driver for everything else — with automatic fallback between them.
+**x-tweet-fetcher** solves this with **smart backend routing**: FxTwitter for single tweets (zero deps), an authenticated GraphQL backend for complete timelines, X's public syndication endpoint for login-free timelines, Nitter for search and replies (direct HTTP), a browser driver for everything else — with automatic fallback between them.
 
 ## 🚀 Quick Start
 
@@ -41,6 +41,10 @@ xtf --url https://x.com/user/status/1234567890
 # User timeline — works instantly too (login-free syndication endpoint)
 xtf --user elonmusk --limit 50
 
+# Full timeline (30+ posts, paginated) — sign in once
+export XTF_AUTH_TOKEN=... XTF_CT0=...   # your X cookies
+xtf --user elonmusk --limit 30 --backend xauth
+
 # Search (needs a Nitter instance, see below)
 export XTF_NITTER=http://127.0.0.1:8788
 xtf --search "openclaw" --limit 10
@@ -51,22 +55,58 @@ xtf --user elonmusk --text-only
 
 Prefer not to install? `python3 scripts/fetch_tweet.py --url ...` works straight from the clone (same flags).
 
-## 🔀 Four Backends
+## 🔀 Five Backends
 
 | Backend | Deps | Speed | Covers |
 |---------|------|-------|--------|
 | **fxtwitter** | None (stdlib) | ⚡⚡ | Single tweets, user profiles |
-| **syndication** | None (stdlib) | ⚡⚡ | User timelines (up to ~100 recent tweets) |
+| **xauth** | X cookies | ⚡⚡ | **Full timeline, paginated (30-100+)** |
+| **xcom** | None (stdlib) | ⚡ | Timeline first screen (~3-5, but current) |
+| **syndication** | None (stdlib) | ⚡⚡ | Widget timeline (varies per account) |
 | **nitter** | A Nitter instance | ⚡ | Timeline, search, replies, mentions |
 | **browser** | Camofox *or* Playwright | 🐢 | Everything above + **Lists** + **X Articles** |
-| **auto** (default) | Best available | ⚡→🐢 | syndication → Nitter → browser |
+| **auto** (default) | Best available | ⚡→🐢 | xauth → xcom → syndication → nitter → browser |
 
 ```bash
-xtf --user elonmusk                    # auto (default)
-xtf --user elonmusk --backend syndication  # login-free, no Nitter instance
-xtf --user elonmusk --backend nitter   # direct HTTP only
-xtf --list 1455045069516357634         # lists always use the browser
+xtf --user elonmusk                      # auto (default)
+xtf --user elonmusk --limit 30 --backend xauth   # full timeline (needs cookies)
+xtf --user elonmusk --backend xcom       # login-free, current but short
+xtf --user elonmusk --backend syndication # login-free, longer but may be stale
+xtf --list 1455045069516357634           # lists always use the browser
 ```
+
+**Picking a login-free backend.** Measured on the same account, minutes apart:
+
+| Account | `xcom` (logged-out page) | `syndication` (widget) |
+|---------|--------------------------|------------------------|
+| `aleabitoreddit` | 3 tweets, newest was minutes old | **2 tweets from 2025** — stale |
+| `nasa` | — | 19 tweets, strictly newest-first |
+| `elonmusk` | — | 100 tweets, but a "top tweets" mix from 2022-2025 |
+
+So: `xcom` is short but trustworthy; `syndication` can be long but hands some accounts
+year-old "featured" tweets. `auto` tries `xcom` first and does not fall through to
+`syndication` on success, so a current timeline is never silently replaced by stale posts.
+For a complete timeline, use `xauth`.
+
+**The `xauth` backend.** It reproduces the signed-in web app's GraphQL calls
+(`UserByScreenName` → `UserOriginalsTimeline`) over plain HTTP: no browser, no Playwright.
+One page carries 20 tweets and the cursor paginates as far back as you ask — measured
+`--limit 30` → 30 tweets across 2 pages, strictly newest-first, in a couple of seconds.
+
+```bash
+export XTF_AUTH_TOKEN=<auth_token cookie>
+export XTF_CT0=<ct0 cookie>            # sent as x-csrf-token
+xtf --user someone --limit 50 --backend xauth
+```
+
+- Cookies come from a signed-in browser (DevTools → Application → Cookies → `x.com`).
+  `auth_token` typically stays valid for **months**, not hours.
+- Query ids and feature flags rotate on X's schedule and live in
+  `src/xtf/data/x_graphql.json`; refresh them with
+  `python scripts/refresh_graphql_template.py` (needs the `[playwright]` extra) when calls start failing.
+- Because these are *signed-in* calls, they are not subject to the 429s that the
+  anonymous endpoints return for datacenter IPs — which is what makes the
+  [GitHub Actions](#-github-actions) workflow viable.
 
 **A note on the syndication backend.** It reads `syndication.twitter.com/srv/timeline-profile`,
 the X-owned endpoint that renders embedded profile timelines. It needs no login and no
@@ -81,13 +121,13 @@ Two things are worth knowing before you rely on it:
   very-high-engagement accounts (`elonmusk`) are instead served a **"top tweets" mix** of
   old viral posts, so `--limit 50` can reach back years. The backend sorts by `created_at`
   so the output is time-ordered either way, but for a complete timeline of such an account
-  you need a self-hosted Nitter instance.
-- **Rate limit.** X allows roughly **30 requests per window per client** (the endpoint
+  you need `xauth` or a self-hosted Nitter instance.
+- **Rate limit.** X allows roughly **30 requests per window per IP** (the endpoint
   answers `429` with `x-rate-limit-limit: 30`). The backend therefore caches each page
   in-process for 90 seconds (`XTF_SYNDICATION_TTL`), and a `429` falls through to
   Nitter / the browser instead of failing the fetch.
 
-Set `XTF_SYNDICATION=0` to take it out of the auto chain.
+Set `XTF_SYNDICATION=0` (or `XTF_XCOM=0`) to take either out of the auto chain.
 
 **Browser driver** defaults to Camofox (`localhost:9377`). Playwright users:
 
@@ -102,7 +142,8 @@ export XTF_BROWSER=playwright          # or: --browser-driver playwright
 |---------|------|---------|
 | Single tweet (text, stats, media, quotes) | `--url` | fxtwitter |
 | Reply comments (threaded) | `--url --replies` | nitter / browser |
-| User timeline (up to ~100 recent) | `--user` | syndication → nitter → browser |
+| User timeline (paginated, complete) | `--user` | **xauth** |
+| User timeline (login-free) | `--user` | xcom → syndication → nitter → browser |
 | Search | `--search` | nitter |
 | User profile | `--user-info` | fxtwitter → nitter → syndication |
 | X List tweets | `--list` | browser |
@@ -160,7 +201,11 @@ Everything is an environment variable (CLI flags override):
 
 | Variable | Default | Meaning |
 |----------|---------|---------|
+| `XTF_AUTH_TOKEN` | — | X `auth_token` cookie. Enables the `xauth` backend (full timeline) |
+| `XTF_CT0` | — | X `ct0` cookie, sent as `x-csrf-token` |
+| `XTF_XAUTH` | `1` | Set to `0` to keep `xauth` out of the auto chain |
 | `XTF_NITTER` | `http://127.0.0.1:8788` | Comma-separated Nitter instances, tried in order with failover |
+| `XTF_XCOM` | `1` | Set to `0` to drop the logged-out x.com profile backend |
 | `XTF_SYNDICATION` | `1` | Set to `0` to drop the login-free syndication backend from the auto chain |
 | `XTF_SYNDICATION_URL` | `https://syndication.twitter.com` | Comma-separated syndication base URLs (for a mirror/proxy) |
 | `XTF_SYNDICATION_TTL` | `90` | Seconds a fetched timeline is reused in-process (`0` disables caching) |
@@ -192,31 +237,37 @@ If no instance is reachable, you get a clear error (`error_code: "all_backends_f
 
 ## 🤖 GitHub Actions
 
-`.github/workflows/fetch-tweets.yml` runs the whole pipeline on a schedule — no server, no Nitter instance, no cookies:
+`.github/workflows/fetch-tweets.yml` runs the whole pipeline on a schedule — no server, no Nitter instance, no browser:
 
 ```
-GitHub Actions (cron) -> xtf --user <name> -> snapshots/<name>.json -> committed back to the repo
+GitHub Actions (cron) -> xtf --user <name> --limit 30 --backend xauth
+                      -> snapshots/<name>.json + latest.json -> committed back to the repo
 ```
 
-- Fires every 6 hours (`0 */6 * * *`) and on manual **Run workflow** with `username` / `limit` inputs.
-- Writes `snapshots/<name>.json` plus `snapshots/latest.json`, then commits them as `github-actions[bot]`.
-- A failed fetch (e.g. the syndication quota is momentarily exhausted) is skipped with an Actions warning, **not** committed as a fake empty snapshot.
+**Setup (once):**
 
-**Why CI needs `XTF_WAIT_RATE_LIMIT: "1500"`.** X caps the syndication endpoint at 30
-requests/window **per IP**, and every GitHub-hosted runner shares a small pool of
-datacenter egress addresses — a measured probe returned
-`429 x-rate-limit-limit: 30, x-rate-limit-remaining: 0` with a reset about 14 minutes out.
-The endpoint tells you when the quota refills, so the workflow sets a 25-minute wait
-budget: instead of failing, the fetch sleeps out the reset and retries. Verified on a real
-run — `fetching @nasa (limit 50)` → `tweets=19 backend=syndication` → committed
-`chore(snapshots): fetch tweets 2026-11-07T11:46Z`.
+```bash
+gh secret set XTF_AUTH_TOKEN -R <you>/<repo> -b '<auth_token cookie>'
+gh secret set XTF_CT0        -R <you>/<repo> -b '<ct0 cookie>'
+```
 
-`fxtwitter` (single tweets/profiles) is **not** rate limited this way and works from
-runners unmodified.
+- Fires **hourly** (`0 * * * *`) and on manual **Run workflow** with `username` / `limit` / `backend` inputs.
+- Merges each fetch into `snapshots/<name>.json` — deduped by `tweet_id`, sorted by absolute time, truncated to `limit` — so the file is a rolling window of the newest N posts.
+- Also writes `snapshots/latest.json` and commits both as `github-actions[bot]`.
+- A failed fetch goes red with the stderr attached; it never commits a fake or stale snapshot.
 
-Set `XTF_SYNDICATION: "0"` in the workflow env to force the Nitter path, and adjust `cron`
-to change the polling rate. Note that the widget page size varies per account: `nasa`
-served 19 tweets, `elonmusk` served 100 — `--limit` is an upper bound, not a guarantee.
+**Why `xauth` and not the free endpoints.** Measured from a GitHub runner, the anonymous
+endpoints are unusable: `syndication` answered `429` with `x-rate-limit-limit: 30,
+remaining: 0` (the whole shared runner IP pool competes for it) and the logged-out
+`x.com` profile page answered `429` with **no reset hint at all**, so waiting does not
+help. The signed-in GraphQL call is not affected — a verified run fetched
+`tweets=30 backend=xauth` across 2 pages and committed the snapshot.
+
+Set `XTF_WAIT_RATE_LIMIT` (the workflow ships `1500`) to let the free backends sleep out a
+quota reset when they *do* get a reset hint. Cookies expire on X's schedule — `auth_token`
+typically lasts months; when the job starts failing, re-run the two `gh secret set`
+commands. Nothing is ever written to the repository, and rotating the cookie invalidates
+the old value.
 
 Consume the snapshot over raw HTTP, e.g.:
 
@@ -231,16 +282,22 @@ src/xtf/
 ├── models.py        # Tweet / Reply / Profile / Article dataclasses
 ├── backends/
 │   ├── fxtwitter.py # single tweets + profiles
-│   ├── syndication.py # login-free timelines (X's public widget endpoint)
+│   ├── xauth.py     # signed-in GraphQL: full paginated timeline
+│   ├── xcom.py      # logged-out x.com profile page (current but short)
+│   ├── syndication.py # login-free widget timelines
 │   ├── nitter.py    # direct HTTP, multi-instance failover
 │   └── browser.py   # Camofox / Playwright snapshot fetching
 ├── parsers/         # pure functions, locked by fixture tests
-│   └── syndication_json.py # __NEXT_DATA__ -> Tweet entries
+│   ├── syndication_json.py # __NEXT_DATA__ -> Tweet entries
+│   ├── xcom_ssr.py         # logged-out profile payload
+│   └── x_graphql.py        # GraphQL timeline responses
+├── data/x_graphql.json  # captured query ids + feature flags (refreshable)
 ├── router.py        # auto-fallback chain
 ├── monitor.py       # incremental mentions monitor
 └── cli.py           # the `xtf` command
-scripts/fetch_tweet.py   # v1-compatible entry point (thin shim)
-tests/fixtures/          # captured page structures — regression protection
+scripts/fetch_tweet.py              # v1-compatible entry point (thin shim)
+scripts/refresh_graphql_template.py # recapture X's query ids when they rotate
+tests/fixtures/                     # captured page structures — regression protection
 .github/workflows/fetch-tweets.yml  # scheduled fetch -> snapshots/*.json
 ```
 

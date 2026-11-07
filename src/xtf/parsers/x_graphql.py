@@ -244,7 +244,7 @@ def tweet_to_entry(tweet: dict[str, Any]) -> dict[str, Any]:
         entry["retweeted_status_id"] = str(rt_id)
     rt = tweet.get("retweeted_status_result")
     if isinstance(rt, dict):
-        original = _unwrap_tweet((rt.get("result") if isinstance(rt, dict) else None))
+        original = _unwrap_tweet(rt.get("result") if isinstance(rt, dict) else None)
         if original:
             original_entry = tweet_to_entry(original)
             entry["retweeted_status_id"] = original_entry.get("tweet_id", "")

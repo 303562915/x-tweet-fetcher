@@ -22,7 +22,6 @@ makes it viable from datacenter IPs where the anonymous endpoints answer 429.
 from __future__ import annotations
 
 import json
-import os
 import sys
 import time
 import urllib.parse

@@ -2,10 +2,11 @@
 name: x-tweet-fetcher
 description: >
   Fetch tweets, replies, timelines, search results, X Lists, and X Articles
-  from X/Twitter without login or API keys. Single tweets: zero dependencies
-  (FxTwitter). User timelines: zero dependencies (X's public syndication
-  endpoint, ~100 most recent tweets). Search/replies/mentions: a Nitter
-  instance (XTF_NITTER). Lists/Articles: a browser driver (Camofox or
+  from X/Twitter. Single tweets: zero dependencies (FxTwitter). Full paginated
+  timelines: X cookies (auth_token/ct0) via the signed-in GraphQL API.
+  Login-free timelines: the logged-out profile page (short but current) or the
+  syndication widget (longer but may be stale). Search/replies/mentions: a
+  Nitter instance (XTF_NITTER). Lists/Articles: a browser driver (Camofox or
   Playwright). Unified JSON schema across all backends; machine-readable
   error_code for agent branching.
   Field reports and agent-use questions: Agent Waystation #22 Teahouse:
@@ -22,7 +23,8 @@ Fetch tweets from X/Twitter without authentication. For agent-use stories, failu
 |---------|---------|-------------|
 | Single tweet | `xtf --url <tweet_url>` | None (zero deps) |
 | Reply threads | `xtf --url <tweet_url> --replies` | Nitter or browser |
-| User timeline | `xtf --user <username> --limit 50` | None (zero deps) |
+| User timeline (complete) | `xtf --user <name> --limit 30` | X cookies (xauth) |
+| User timeline (login-free) | `xtf --user <name> --limit 30` | None (xcom / syndication) |
 | Search | `xtf --search "<query>"` | Nitter |
 | User profile | `xtf --user-info <username>` | None (zero deps) |
 | X List | `xtf --list <list_url_or_id>` | Browser (Camofox/Playwright) |
@@ -47,22 +49,37 @@ xtf --url https://x.com/user/status/1234567890 --text-only
 ## Timeline (zero dependencies)
 
 ```bash
-xtf --user elonmusk --limit 50     # login-free syndication endpoint; up to ~100 recent tweets
+xtf --user aleabitoreddit --limit 30    # auto: picks the best available backend
 ```
 
-Reads X's public `syndication.twitter.com/srv/timeline-profile` widget endpoint: no
-login, no API key, no Nitter instance. Output carries absolute `created_at`, `lang`,
-media, quote and retweet fields on top of the usual schema, newest first.
+Two login-free sources, measured minutes apart on the same account:
 
-Measured behavior: most profiles return a reverse-chronological page (`nasa` → 19 tweets,
-strictly newest-first), but a few very-high-engagement accounts (`elonmusk`) get a
-**"top tweets" mix** of old viral posts — `--limit 50` there can reach back years. The
-backend sorts by `created_at` regardless, but a complete timeline for such an account
-needs a self-hosted Nitter instance.
+- **xcom** — the logged-out `x.com/<user>` page embeds the first screen (~3-5 tweets), but
+  they are genuinely current (`aleabitoreddit`: newest was minutes old).
+- **syndication** — `syndication.twitter.com/srv/timeline-profile` can return far more
+  (`nasa`: 19 strictly newest-first, `elonmusk`: 100) but for some accounts it serves a
+  stale "featured" set (`aleabitoreddit`: **2 tweets from 2025**). `auto` tries `xcom`
+  first and does not fall through after a success, so stale data never replaces current.
 
-X rate limits that endpoint to roughly **30 requests/window per client**. The backend
-caches each timeline for 90s in-process (`XTF_SYNDICATION_TTL`) and a `429` falls
-through to Nitter / browser rather than failing. Set `XTF_SYNDICATION=0` to disable it.
+Both share a ~30 requests/window per-IP cap on syndication (wait it out with
+`--wait-rate-limit`), and neither works from datacenter IPs (GitHub runners get 429).
+
+## Full timeline (X cookies)
+
+```bash
+export XTF_AUTH_TOKEN=<auth_token cookie>
+export XTF_CT0=<ct0 cookie>
+xtf --user aleabitoreddit --limit 30 --backend xauth
+```
+
+Reproduces the signed-in web app's GraphQL calls (`UserByScreenName` →
+`UserOriginalsTimeline`) over plain HTTP — no browser, no Playwright. One page is 20 tweets
+and the cursor paginates as deep as you like; measured `--limit 30` → 30 tweets, strictly
+newest-first, in seconds. Being a *signed-in* call, it works from GitHub runners where the
+anonymous endpoints are blocked.
+
+Query ids/feature flags rotate; refresh with `python scripts/refresh_graphql_template.py`
+(needs the `[playwright]` extra) when calls start failing.
 
 ## Search / Replies / Mentions (Nitter)
 
@@ -72,8 +89,8 @@ xtf --search "openclaw" --limit 10
 xtf --url https://x.com/user/status/123 --replies
 ```
 
-Backend selection: `--backend auto` (default, syndication → Nitter → browser),
-`--backend syndication`, `--backend nitter`, `--backend browser`.
+Backend selection: `--backend auto` (default, xauth → xcom → syndication → nitter →
+browser), or pin one with `--backend xauth|xcom|syndication|nitter|browser`.
 
 ## Lists & Articles (Browser)
 
@@ -113,13 +130,15 @@ print(tweets[0].to_dict())
 
 ```
 src/xtf/
-├── backends/   # fxtwitter.py, syndication.py, nitter.py, browser.py
+├── backends/   # fxtwitter.py, xauth.py, xcom.py, syndication.py, nitter.py, browser.py
 ├── parsers/    # pure parsing functions, fixture-tested
+├── data/       # captured GraphQL query ids + feature flags
 ├── router.py   # auto-fallback
 ├── monitor.py  # mentions monitor
 └── cli.py      # the `xtf` command
-scripts/fetch_tweet.py  # v1-compatible shim
-.github/workflows/fetch-tweets.yml  # scheduled fetch -> committed snapshots
+scripts/fetch_tweet.py               # v1-compatible shim
+scripts/refresh_graphql_template.py  # recapture X's query ids
+.github/workflows/fetch-tweets.yml   # scheduled fetch -> committed snapshots
 ```
 
 Looking for Chinese-platform fetching (Weibo/Bilibili/WeChat) or tweet growth tracking? Those moved out of this repo in v2 — see MIGRATION.md.

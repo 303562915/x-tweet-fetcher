@@ -1,5 +1,54 @@
 # Changelog
 
+## 3.3.0 (2026-11-07)
+
+### 新增：xauth 后端（登录态 GraphQL，完整分页时间线）
+
+- `src/xtf/backends/xauth.py`：复现网页版的 GraphQL 调用
+  （`UserByScreenName` → `UserOriginalsTimeline`），纯 HTTP，无需浏览器
+  - 一页 20 条，cursor 可一直往前翻；实测 `--limit 30` → 30 条，严格时间倒序
+  - 凭据来自环境变量：`XTF_AUTH_TOKEN`（auth_token）、`XTF_CT0`（ct0，作为 x-csrf-token）
+  - **登录态请求不受数据中心 IP 限制** —— 这是 GitHub Actions 能跑通的关键
+- `src/xtf/parsers/x_graphql.py`：响应遍历、推文归一化、cursor 处理
+  （含长文 `note_tweet`、转推展开、引用、媒体最优码率）
+- `src/xtf/data/x_graphql.json`：抓取下来的 queryId + features（可刷新）
+- `scripts/refresh_graphql_template.py`：X 轮换 queryId 后重新抓取模板
+
+### 新增：xcom 后端（免登录 x.com 首屏，真实但少）
+
+- `src/xtf/backends/xcom.py` + `parsers/xcom_ssr.py`：解析未登录 profile 页内嵌的
+  `__isTweetResult` 对象，按作者过滤，`\n`/HTML 实体还原，时间倒序
+- 实测 `aleabitoreddit`：首屏 3 条，最新一条是几分钟前的**真实新推**
+  （同一账号 syndication 给的是 **2 条 2025 年的旧推文**）
+- `/with_replies`、`/media` 变体均返回 0；payload 无 cursor，无法翻页
+
+### 路由
+
+- auto 链：`xauth`（配置了 cookie 时）→ `xcom` → `syndication` → `nitter` → `browser`
+- `xcom` 成功后**不回退** syndication，避免把旧推文混进"最新 N 条"
+- 新增开关 `XTF_XAUTH` / `XTF_XCOM`；`--backend` 增加 `xauth` / `xcom`
+
+### 实测记录（2026-11-07）
+
+- **GitHub runner**：匿名入口全部 429（syndication `x-rate-limit-limit: 30, remaining: 0`；
+  x.com profile 页 429 且**无 reset 提示**）；`fxtwitter` 正常；公开 Nitter（28 个）、
+  公共 CORS 代理（allorigins/codetabs/r.jina.ai）、RSS 桥、twiiit 聚合全部不可用
+- **xauth 在 runner 上验证通过**：`tweets=30 backend=xauth`，分 2 页抓取并提交快照
+- `auth_token` cookie 实测有效期到 2027-10（数月级），不是"很快就过期"
+
+### 修复
+
+- `.gitignore` 的 `data/` 规则把 `src/xtf/data/x_graphql.json` 一并忽略，
+  导致 runner 上 editable 安装缺模板；已加 `!src/xtf/data/` 例外
+
+### 测试
+
+- 新增 `tests/test_x_graphql.py`（14 例）与 `tests/test_xcom_ssr.py`（13 例）
+- `test_router_mode_chains` 覆盖五后端链路与各开关
+- 全量：152 passed
+
+---
+
 ## 3.2.0 (2026-11-07)
 
 ### 新增：syndication 后端（免登录用户时间线，零依赖）
