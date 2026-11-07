@@ -66,12 +66,14 @@ jobs:
             cp "snapshots/${XTF_USERNAME}.json" snapshots/latest.json
             echo "ok=1" >> "$GITHUB_OUTPUT"
           else
-            # Keep the failure visible without silently committing an error body
-            # as if it were a successful snapshot.
+            # Keep the failure visible: no fake empty snapshot is committed,
+            # the stderr is surfaced, and the job goes red so the run is not
+            # mistaken for a successful fetch.
             rm -f "snapshots/${XTF_USERNAME}.json"
             echo "ok=0" >> "$GITHUB_OUTPUT"
-            echo "::warning::fetch failed for @${XTF_USERNAME}"
+            echo "::error::fetch failed for @${XTF_USERNAME}"
             cat "${RUNNER_TEMP}/fetch.err"
+            exit 1
           fi
 
           python - <<'PY'
