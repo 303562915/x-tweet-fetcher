@@ -8,3 +8,5 @@ logs/
 dist/
 build/
 *.egg-info/
+# ...but the packaged GraphQL template lives under src/xtf/data/ and must ship.
+!src/xtf/data/
