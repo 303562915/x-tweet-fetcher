@@ -215,6 +215,16 @@ Everything is an environment variable (CLI flags override):
 | `XTF_LANG` | `zh` | Message language: `zh` or `en` |
 | `XTF_CACHE_DIR` | `~/.x-tweet-fetcher` | Mentions-monitor cache |
 
+## 📡 Consuming the snapshots
+
+The scheduled job publishes a read-only JSON feed that any program or agent can
+consume without authentication — see **[docs/snapshot-api.md](docs/snapshot-api.md)**
+for the full contract (URLs, schema, field coverage, edge cases).
+
+```bash
+curl -sL https://raw.githubusercontent.com/303562915/x-tweet-fetcher/main/snapshots/latest.json | jq '.count'
+```
+
 `NITTER_URL` (the v1 name) is still honored as a fallback for `XTF_NITTER`.
 
 ## 🏗 Self-hosted Nitter
