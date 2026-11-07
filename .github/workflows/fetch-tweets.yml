@@ -24,6 +24,10 @@ on:
         description: "How many recent posts the snapshot keeps"
         required: true
         default: "30"
+      backend:
+        description: "Backend to fetch with"
+        required: false
+        default: "xcom"
 
 permissions:
   contents: write
@@ -52,15 +56,19 @@ jobs:
           # Manual runs use the inputs; scheduled runs fall back to the defaults.
           XTF_USERNAME: ${{ github.event.inputs.username || 'aleabitoreddit' }}
           XTF_LIMIT: ${{ github.event.inputs.limit || '30' }}
-          # The syndication fallback reports when its shared 30/window quota
-          # refills; sleep that out rather than failing the run (max 25 min).
+          # Pin the backend: falling back to syndication here would silently
+          # replace a current timeline with year-old "featured" tweets.
+          XTF_BACKEND: ${{ github.event.inputs.backend || 'xcom' }}
+          # Both X endpoints report when their shared quota refills; sleep that
+          # out rather than failing the run (max 25 min).
           XTF_WAIT_RATE_LIMIT: "1500"
         run: |
           set -o pipefail
           mkdir -p snapshots
 
-          echo "fetching @${XTF_USERNAME} (limit ${XTF_LIMIT})"
-          if ! xtf --user "${XTF_USERNAME}" --limit "${XTF_LIMIT}" --pretty \
+          echo "fetching @${XTF_USERNAME} (limit ${XTF_LIMIT}, backend ${XTF_BACKEND})"
+          if ! xtf --user "${XTF_USERNAME}" --limit "${XTF_LIMIT}" \
+                 --backend "${XTF_BACKEND}" --pretty \
                  > "${RUNNER_TEMP}/fetched.json" 2> "${RUNNER_TEMP}/fetch.err"; then
             echo "::error::fetch failed for @${XTF_USERNAME}"
             cat "${RUNNER_TEMP}/fetch.err"

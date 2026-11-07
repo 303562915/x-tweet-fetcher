@@ -47,7 +47,7 @@ class Router:
         """backend: 'auto' | 'syndication' | 'nitter' | 'browser'."""
         self.mode = backend
         self.fxtwitter = FxTwitterBackend()
-        self.xcom = XcomBackend()
+        self.xcom = XcomBackend(wait_budget=wait_rate_limit)
         self.syndication = SyndicationBackend(wait_budget=wait_rate_limit)
         self.nitter = NitterBackend(instances=nitter_instances)
         self.browser = BrowserBackend(driver=browser_driver, port=browser_port,

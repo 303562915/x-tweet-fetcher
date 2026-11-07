@@ -21,6 +21,7 @@ silently append old viral tweets to the result.
 from __future__ import annotations
 
 import sys
+import time
 
 from .. import config, http
 from ..exceptions import InvalidInput, RateLimited, UpstreamDown, XtfError
@@ -42,8 +43,12 @@ _HEADERS = {
 class XcomBackend(Backend):
     name = "xcom"
 
-    def __init__(self, timeout: int = 30):
+    def __init__(self, timeout: int = 30, wait_budget: int | None = None):
         self.timeout = timeout
+        #: x.com rate limits anonymous profile views too, and datacenter IPs
+        #: (CI runners) hit that ceiling quickly — so the same opt-in wait as
+        #: the syndication backend applies here.
+        self.wait_budget = config.rate_limit_wait() if wait_budget is None else wait_budget
 
     @staticmethod
     def _clean(username: str) -> str:
@@ -55,17 +60,26 @@ class XcomBackend(Backend):
 
     def _get_profile_html(self, username: str) -> str:
         url = f"https://x.com/{username}"
-        try:
-            return http.get_text(url, headers=_HEADERS, timeout=self.timeout, retries=1)
-        except RateLimited as e:
-            hint = e.wait_seconds()
-            when = f" (refills in ~{hint}s)" if hint else ""
-            raise RateLimited(
-                f"xcom: x.com rate limited the profile page{when} — retry later",
-                reset_at=e.reset_at, retry_after=e.retry_after,
-            ) from e
-        except XtfError as e:
-            raise UpstreamDown(f"xcom: cannot load {url}: {e}") from e
+        budget = self.wait_budget
+        while True:
+            try:
+                return http.get_text(url, headers=_HEADERS, timeout=self.timeout, retries=1)
+            except RateLimited as e:
+                wait = e.wait_seconds()
+                if budget and wait is not None and wait <= budget:
+                    print(f"[xcom] rate limited, {wait}s until reset — waiting",
+                          file=sys.stderr)
+                    time.sleep(wait)
+                    budget -= wait
+                    continue
+                hint = f" (refills in ~{wait}s)" if wait else ""
+                raise RateLimited(
+                    f"xcom: x.com rate limited the profile page{hint} — "
+                    "retry later or raise --wait-rate-limit",
+                    reset_at=e.reset_at, retry_after=e.retry_after,
+                ) from e
+            except XtfError as e:
+                raise UpstreamDown(f"xcom: cannot load {url}: {e}") from e
 
     def available(self) -> bool:
         # Reachability is decided per call so a probe never costs a request.
