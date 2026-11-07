@@ -37,6 +37,40 @@ class Tweet:
     media: list[str] = field(default_factory=list)
     retweeted_by: str | None = None
     quoted_tweet: Tweet | None = None
+    # Absolute/metadata fields. Only the syndication backend fills these, so
+    # they stay absent from ``to_dict()`` for backends that lack them and the
+    # v1 JSON shape is unchanged there.
+    created_at: str = ""
+    lang: str = ""
+    urls: list[str] = field(default_factory=list)
+    in_reply_to_status_id: str = ""
+    retweeted_status_id: str = ""
+    quoted_status_id: str = ""
+
+    @classmethod
+    def from_syndication_entry(cls, d: dict[str, Any]) -> Tweet:
+        """Normalize a syndication_json parser entry (keeps created_at/lang)."""
+        qt = d.get("quoted_tweet")
+        return cls(
+            author=d.get("author", ""),
+            author_name=d.get("author_name", d.get("author", "")),
+            text=d.get("text", ""),
+            time_ago=d.get("time_ago", ""),
+            likes=d.get("likes", 0),
+            retweets=d.get("retweets", 0),
+            replies=d.get("replies", 0),
+            views=d.get("views", 0),
+            tweet_id=str(d.get("tweet_id", "") or ""),
+            media=list(d.get("media", []) or []),
+            retweeted_by=d.get("retweeted_by"),
+            quoted_tweet=cls.from_syndication_entry(qt) if qt else None,
+            created_at=d.get("created_at", "") or "",
+            lang=d.get("lang", "") or "",
+            urls=list(d.get("urls", []) or []),
+            in_reply_to_status_id=str(d.get("in_reply_to_status_id", "") or ""),
+            retweeted_status_id=str(d.get("retweeted_status_id", "") or ""),
+            quoted_status_id=str(d.get("quoted_status_id", "") or ""),
+        )
 
     @classmethod
     def from_snapshot_entry(cls, d: dict[str, Any]) -> Tweet:
@@ -91,6 +125,18 @@ class Tweet:
             d["retweeted_by"] = self.retweeted_by
         if self.quoted_tweet:
             d["quoted_tweet"] = self.quoted_tweet.to_dict()
+        if self.created_at:
+            d["created_at"] = self.created_at
+        if self.lang:
+            d["lang"] = self.lang
+        if self.urls:
+            d["urls"] = self.urls
+        if self.in_reply_to_status_id:
+            d["in_reply_to_status_id"] = self.in_reply_to_status_id
+        if self.retweeted_status_id:
+            d["retweeted_status_id"] = self.retweeted_status_id
+        if self.quoted_status_id:
+            d["quoted_status_id"] = self.quoted_status_id
         return d
 
 

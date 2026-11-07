@@ -62,14 +62,15 @@ def build_parser() -> argparse.ArgumentParser:
             "Fetch tweets from X/Twitter.\n"
             "  --url <URL>              Single tweet via FxTwitter (zero deps)\n"
             "  --url <URL> --replies    Tweet replies via Nitter / browser\n"
-            "  --user <username>        User timeline via Nitter / browser\n"
+            "  --user <username>        User timeline via syndication / Nitter / browser\n"
             "  --search <query>         Search tweets via Nitter\n"
             "  --user-info <username>   User profile via FxTwitter\n"
             "  --article <URL_or_ID>    X Article full text via browser\n"
             "  --monitor @username      Monitor X mentions (incremental, cron-friendly)\n"
             "  --list <list_url_or_id>  Fetch tweets from an X List via browser\n"
             "\n"
-            "Backends: auto (default, Nitter first then browser), nitter, browser.\n"
+            "Backends: auto (default, syndication then Nitter then browser),\n"
+            "syndication, nitter, browser.\n"
             "Configure Nitter instances via XTF_NITTER=url1,url2 (see README)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -94,8 +95,11 @@ def build_parser() -> argparse.ArgumentParser:
                         help=f"Browser (Camofox) port (default: {config.DEFAULT_BROWSER_PORT})")
     parser.add_argument("--nitter", default=None,
                         help="Nitter instance(s), comma-separated. Overrides XTF_NITTER.")
-    parser.add_argument("--backend", choices=["auto", "nitter", "browser"], default="auto",
-                        help="Backend: nitter (direct HTTP), browser (Camofox/Playwright), auto (nitter first, browser fallback)")
+    parser.add_argument("--backend", choices=["auto", "syndication", "nitter", "browser"],
+                        default="auto",
+                        help="Backend: syndication (login-free widget endpoint), "
+                             "nitter (direct HTTP), browser (Camofox/Playwright), "
+                             "auto (syndication -> nitter -> browser)")
     parser.add_argument("--browser-driver", choices=["camofox", "playwright"], default=None,
                         help="Browser driver (default: XTF_BROWSER env or camofox)")
     parser.add_argument("--ledger", metavar="DB",

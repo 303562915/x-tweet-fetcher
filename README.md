@@ -8,9 +8,9 @@
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-green.svg)](https://www.python.org)
 [![GitHub stars](https://img.shields.io/github/stars/ythx-101/x-tweet-fetcher?style=social)](https://github.com/ythx-101/x-tweet-fetcher)
 
-*Three backends · Auto fallback · Unified JSON schema · Built for AI agents*
+*Four backends · Auto fallback · Unified JSON schema · Built for AI agents*
 
-[Quick Start](#-quick-start) · [Backends](#-three-backends) · [Capabilities](#-capabilities) · [Python API](#-python-api) · [Self-hosted Nitter](#-self-hosted-nitter) · [Migrating from v1](#-migrating-from-v1)
+[Quick Start](#-quick-start) · [Backends](#-four-backends) · [Capabilities](#-capabilities) · [Python API](#-python-api) · [Self-hosted Nitter](#-self-hosted-nitter) · [GitHub Actions](#-github-actions) · [Migrating from v1](#-migrating-from-v1)
 
 </div>
 
@@ -27,7 +27,7 @@ You: ...seriously?
 
 X has no free API. Scraping gets you blocked. Browser automation is fragile in headless environments.
 
-**x-tweet-fetcher** solves this with **smart backend routing**: FxTwitter for single tweets (zero deps), Nitter for timelines and search (direct HTTP), a browser driver for everything else — with automatic fallback between them.
+**x-tweet-fetcher** solves this with **smart backend routing**: FxTwitter for single tweets (zero deps), X's own public syndication endpoint for user timelines (zero deps, no Nitter needed), Nitter for search and replies (direct HTTP), a browser driver for everything else — with automatic fallback between them.
 
 ## 🚀 Quick Start
 
@@ -38,11 +38,11 @@ cd x-tweet-fetcher && pip install .
 # Single tweet — works instantly, zero configuration
 xtf --url https://x.com/user/status/1234567890
 
-# User timeline (needs a Nitter instance, see below)
-export XTF_NITTER=http://127.0.0.1:8788
-xtf --user elonmusk --limit 20
+# User timeline — works instantly too (login-free syndication endpoint)
+xtf --user elonmusk --limit 50
 
-# Search
+# Search (needs a Nitter instance, see below)
+export XTF_NITTER=http://127.0.0.1:8788
 xtf --search "openclaw" --limit 10
 
 # Human-readable output instead of JSON
@@ -51,20 +51,43 @@ xtf --user elonmusk --text-only
 
 Prefer not to install? `python3 scripts/fetch_tweet.py --url ...` works straight from the clone (same flags).
 
-## 🔀 Three Backends
+## 🔀 Four Backends
 
 | Backend | Deps | Speed | Covers |
 |---------|------|-------|--------|
 | **fxtwitter** | None (stdlib) | ⚡⚡ | Single tweets, user profiles |
+| **syndication** | None (stdlib) | ⚡⚡ | User timelines (up to ~100 recent tweets) |
 | **nitter** | A Nitter instance | ⚡ | Timeline, search, replies, mentions |
 | **browser** | Camofox *or* Playwright | 🐢 | Everything above + **Lists** + **X Articles** |
-| **auto** (default) | Best available | ⚡→🐢 | Nitter first, browser fallback |
+| **auto** (default) | Best available | ⚡→🐢 | syndication → Nitter → browser |
 
 ```bash
 xtf --user elonmusk                    # auto (default)
+xtf --user elonmusk --backend syndication  # login-free, no Nitter instance
 xtf --user elonmusk --backend nitter   # direct HTTP only
 xtf --list 1455045069516357634         # lists always use the browser
 ```
+
+**A note on the syndication backend.** It reads `syndication.twitter.com/srv/timeline-profile`,
+the X-owned endpoint that renders embedded profile timelines. It needs no login and no
+Nitter instance, and one request returns up to ~100 tweets with absolute timestamps
+(`created_at`), language, media, quotes, and retweets. Entries are always emitted
+newest-first.
+
+Two things are worth knowing before you rely on it:
+
+- **Page size and ordering vary by account.** Most profiles return a reverse-chronological
+  page (measured: `nasa` → 19 tweets, strictly newest-first). A handful of
+  very-high-engagement accounts (`elonmusk`) are instead served a **"top tweets" mix** of
+  old viral posts, so `--limit 50` can reach back years. The backend sorts by `created_at`
+  so the output is time-ordered either way, but for a complete timeline of such an account
+  you need a self-hosted Nitter instance.
+- **Rate limit.** X allows roughly **30 requests per window per client** (the endpoint
+  answers `429` with `x-rate-limit-limit: 30`). The backend therefore caches each page
+  in-process for 90 seconds (`XTF_SYNDICATION_TTL`), and a `429` falls through to
+  Nitter / the browser instead of failing the fetch.
+
+Set `XTF_SYNDICATION=0` to take it out of the auto chain.
 
 **Browser driver** defaults to Camofox (`localhost:9377`). Playwright users:
 
@@ -79,9 +102,9 @@ export XTF_BROWSER=playwright          # or: --browser-driver playwright
 |---------|------|---------|
 | Single tweet (text, stats, media, quotes) | `--url` | fxtwitter |
 | Reply comments (threaded) | `--url --replies` | nitter / browser |
-| User timeline (paginated) | `--user` | nitter / browser |
+| User timeline (up to ~100 recent) | `--user` | syndication → nitter → browser |
 | Search | `--search` | nitter |
-| User profile | `--user-info` | fxtwitter → nitter |
+| User profile | `--user-info` | fxtwitter → nitter → syndication |
 | X List tweets | `--list` | browser |
 | X Article full text | `--article` | browser |
 | Mentions monitor (incremental, cron-friendly) | `--monitor` | nitter / browser |
@@ -138,6 +161,9 @@ Everything is an environment variable (CLI flags override):
 | Variable | Default | Meaning |
 |----------|---------|---------|
 | `XTF_NITTER` | `http://127.0.0.1:8788` | Comma-separated Nitter instances, tried in order with failover |
+| `XTF_SYNDICATION` | `1` | Set to `0` to drop the login-free syndication backend from the auto chain |
+| `XTF_SYNDICATION_URL` | `https://syndication.twitter.com` | Comma-separated syndication base URLs (for a mirror/proxy) |
+| `XTF_SYNDICATION_TTL` | `90` | Seconds a fetched timeline is reused in-process (`0` disables caching) |
 | `XTF_BROWSER` | `camofox` | Browser driver: `camofox` or `playwright` |
 | `XTF_BROWSER_PORT` | `9377` | Camofox HTTP port |
 | `XTF_LANG` | `zh` | Message language: `zh` or `en` |
@@ -147,7 +173,7 @@ Everything is an environment variable (CLI flags override):
 
 ## 🏗 Self-hosted Nitter
 
-Public Nitter instances are unreliable and frequently dead. **Self-hosting is strongly recommended** for timeline/search/replies:
+Public Nitter instances are unreliable and frequently dead — as of 2026 most are gone. **Timelines no longer need Nitter at all** (they use the syndication backend), so a Nitter instance is now only required for **search**, **replies**, and **mentions monitoring**. For those, self-hosting is strongly recommended:
 
 ```bash
 # See https://github.com/zedeus/nitter for full setup
@@ -163,6 +189,26 @@ export XTF_NITTER=http://127.0.0.1:8788,https://your-backup-instance.example
 
 If no instance is reachable, you get a clear error (`error_code: "all_backends_failed"`, with each backend's reason — e.g. `backend_unavailable` — under `error_causes`) telling you exactly what to set. Never a silent empty result.
 
+## 🤖 GitHub Actions
+
+`.github/workflows/fetch-tweets.yml` runs the whole pipeline on a schedule — no server, no Nitter instance, no cookies:
+
+```
+GitHub Actions (cron) -> xtf --user <name> -> snapshots/<name>.json -> committed back to the repo
+```
+
+- Fires every 6 hours (`0 */6 * * *`) and on manual **Run workflow** with `username` / `limit` inputs.
+- Writes `snapshots/<name>.json` plus `snapshots/latest.json`, then commits them as `github-actions[bot]`.
+- A failed fetch (e.g. the syndication quota is momentarily exhausted) is skipped with an Actions warning, **not** committed as a fake empty snapshot.
+
+Set `XTF_SYNDICATION: "0"` in the workflow env to force the Nitter path, and adjust `cron` to change the polling rate. Each runner uses a fresh egress IP, so the ~30 requests/window syndication quota is normally not a constraint.
+
+Consume the snapshot over raw HTTP, e.g.:
+
+```bash
+curl -s https://raw.githubusercontent.com/<you>/<repo>/main/snapshots/latest.json | jq '.count'
+```
+
 ## 📁 Project Structure
 
 ```
@@ -170,14 +216,17 @@ src/xtf/
 ├── models.py        # Tweet / Reply / Profile / Article dataclasses
 ├── backends/
 │   ├── fxtwitter.py # single tweets + profiles
+│   ├── syndication.py # login-free timelines (X's public widget endpoint)
 │   ├── nitter.py    # direct HTTP, multi-instance failover
 │   └── browser.py   # Camofox / Playwright snapshot fetching
 ├── parsers/         # pure functions, locked by fixture tests
+│   └── syndication_json.py # __NEXT_DATA__ -> Tweet entries
 ├── router.py        # auto-fallback chain
 ├── monitor.py       # incremental mentions monitor
 └── cli.py           # the `xtf` command
 scripts/fetch_tweet.py   # v1-compatible entry point (thin shim)
 tests/fixtures/          # captured page structures — regression protection
+.github/workflows/fetch-tweets.yml  # scheduled fetch -> snapshots/*.json
 ```
 
 ## 🔄 Migrating from v1

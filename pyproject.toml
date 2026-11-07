@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "x-tweet-fetcher"
-version = "3.1.0"
+version = "3.2.0"
 description = "Fetch X/Twitter tweets, replies, timelines, and articles without login or API keys — field tool for AI agents."
 readme = "README.md"
 requires-python = ">=3.10"

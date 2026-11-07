@@ -1,5 +1,41 @@
 # Changelog
 
+## 3.2.0 (2026-11-07)
+
+### 新增：syndication 后端（免登录用户时间线，零依赖）
+
+- `src/xtf/backends/syndication.py`：读取 X 官方公开嵌入入口
+  `syndication.twitter.com/srv/timeline-profile`，一次请求返回该用户最近约 100 条推文
+  - 无需登录、无需 API Key、**无需 Nitter 实例**、无需浏览器
+  - 单进程内 90 秒 TTL 缓存（`XTF_SYNDICATION_TTL`），429 时自动回退 Nitter / browser
+  - `XTF_SYNDICATION=0` 可从 auto 链中摘除；`XTF_SYNDICATION_URL` 支持自建镜像
+- `src/xtf/parsers/syndication_json.py`：纯函数解析 `__NEXT_DATA__`
+  - 归一化转推（展开原推 + `retweeted_by`）、引用推文、媒体（图片/最高码率视频）、外链
+  - 绝对时间戳 -> `time_ago`（`created_at` 原文保留）
+- `Tweet` 模型新增可选字段：`created_at` / `lang` / `urls` / `in_reply_to_status_id` /
+  `retweeted_status_id` / `quoted_status_id`（仅 syndication 填充；其余后端输出不变，
+  v1 JSON 兼容）
+- 路由优先级：timeline `syndication → nitter → browser`；user-info `fxtwitter → nitter → syndication`
+- CLI：`--backend` 新增 `syndication`，帮助文案与 `--user-info` 说明同步更新
+
+### 新增：GitHub Actions 定时抓取
+
+- `.github/workflows/fetch-tweets.yml`：cron（每 6 小时）+ 手动触发
+  - 抓取 `--user <name> --limit <n>` 写入 `snapshots/<name>.json` 与 `snapshots/latest.json`
+  - 由 `github-actions[bot]` 提交回仓库；失败时只告警不提交空快照
+
+### 测试
+
+- `tests/test_syndication.py`：20 个用例覆盖页面解析、转推/引用/媒体/时间归一化、模型字段输出
+- `tests/test_core.py::test_router_mode_chains`：更新为四后端链路，并覆盖 `XTF_SYNDICATION=0`
+- 全量：117 passed（本机 Windows 下 2 个 `test_cli.py` 用例因 subprocess 输出解码跳过，见已知边界）
+
+### 文档
+
+- README / SKILL.md：四后端表格、syndication 限流说明（约 30 次/窗口）、GitHub Actions 章节
+
+---
+
 ## 3.1.0 (2026-08-09)
 
 ### 新增：推文库 (Ledger)

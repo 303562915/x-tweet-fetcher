@@ -103,13 +103,18 @@ def test_router_all_failed_carries_causes():
     assert ei.value.to_dict()["code"] == "all_backends_failed"
 
 
-def test_router_mode_chains():
+def test_router_mode_chains(monkeypatch):
     r = Router(backend="nitter")
     assert [b.name for b in r._chain()] == ["nitter"]
     r = Router(backend="browser")
     assert [b.name for b in r._chain()] == ["browser"]
+    r = Router(backend="syndication")
+    assert [b.name for b in r._chain()] == ["syndication"]
     r = Router(backend="auto")
-    assert [b.name for b in r._chain()] == ["nitter", "browser"]
+    assert [b.name for b in r._chain()] == ["syndication", "nitter", "browser"]
+    # XTF_SYNDICATION=0 removes the login-free backend from the auto chain.
+    monkeypatch.setenv("XTF_SYNDICATION", "0")
+    assert [b.name for b in Router(backend="auto")._chain()] == ["nitter", "browser"]
 
 
 # ── http retry ────────────────────────────────────────────────────────────

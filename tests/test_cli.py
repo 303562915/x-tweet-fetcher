@@ -13,6 +13,17 @@ from xtf.models import Reply, Tweet
 
 ROOT = Path(__file__).parent.parent
 
+#: Subprocess output is decoded explicitly as UTF-8: the CLI prints Chinese
+#: tool messages, while ``text=True`` alone would decode with the host locale
+#: (GBK on zh-CN Windows) and blow up before the assertions ever run. The child
+#: is told the same thing through PYTHONIOENCODING so both ends agree.
+_RUN_KW = {"capture_output": True, "text": True, "encoding": "utf-8", "errors": "replace"}
+_ENV = {
+    "PYTHONPATH": str(ROOT / "src"),
+    "PYTHONIOENCODING": "utf-8",
+    "PATH": "/usr/bin:/bin",
+}
+
 
 def test_all_v1_flags_accepted():
     parser = build_parser()
@@ -35,8 +46,7 @@ def test_mutually_exclusive_modes_exit_1():
     proc = subprocess.run(
         [sys.executable, "-m", "xtf.cli", "--url", "https://x.com/a/status/1",
          "--user", "alice"],
-        capture_output=True, text=True,
-        cwd=ROOT, env={"PYTHONPATH": str(ROOT / "src"), "PATH": "/usr/bin:/bin"},
+        cwd=ROOT, env=_ENV, **_RUN_KW,
     )
     assert proc.returncode == 1
 
@@ -44,8 +54,7 @@ def test_mutually_exclusive_modes_exit_1():
 def test_invalid_url_json_envelope():
     proc = subprocess.run(
         [sys.executable, "-m", "xtf.cli", "--url", "https://example.com/nope"],
-        capture_output=True, text=True,
-        cwd=ROOT, env={"PYTHONPATH": str(ROOT / "src"), "PATH": "/usr/bin:/bin"},
+        cwd=ROOT, env=_ENV, **_RUN_KW,
     )
     assert proc.returncode == 1
     out = json.loads(proc.stdout)
@@ -59,8 +68,7 @@ def test_compat_shim_exists_and_parses():
     assert shim.exists()
     proc = subprocess.run(
         [sys.executable, str(shim), "--url", "https://not-a-tweet"],
-        capture_output=True, text=True,
-        cwd=ROOT, env={"PATH": "/usr/bin:/bin"},
+        cwd=ROOT, env={"PATH": _ENV["PATH"], "PYTHONIOENCODING": "utf-8"}, **_RUN_KW,
     )
     assert proc.returncode == 1
     assert "error" in json.loads(proc.stdout)
@@ -85,11 +93,11 @@ class _FakeRouter:
 
 
 def _run_cli(argv, env_extra=None):
-    env = {"PYTHONPATH": str(ROOT / "src"), "PATH": "/usr/bin:/bin"}
+    env = dict(_ENV)
     env.update(env_extra or {})
     return subprocess.run(
         [sys.executable, "-m", "xtf.cli", *argv],
-        capture_output=True, text=True, cwd=ROOT, env=env,
+        cwd=ROOT, env=env, **_RUN_KW,
     )
 
 

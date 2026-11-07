@@ -10,6 +10,11 @@
   XTF_BROWSER_PORT  Camofox HTTP port (default 9377).
   XTF_LANG          Default message language: zh (default) or en.
   XTF_CACHE_DIR     Mentions-monitor cache dir (default ~/.x-tweet-fetcher).
+  XTF_SYNDICATION   Set to 0/false/off to drop the login-free syndication
+                    backend from the auto chain (default: on).
+  XTF_SYNDICATION_URL
+                    Comma-separated syndication base URLs, tried in order.
+                    Default: https://syndication.twitter.com (X-owned).
 """
 from __future__ import annotations
 
@@ -18,6 +23,8 @@ from pathlib import Path
 
 DEFAULT_NITTER = "http://127.0.0.1:8788"
 DEFAULT_BROWSER_PORT = 9377
+DEFAULT_SYNDICATION = "https://syndication.twitter.com"
+DEFAULT_SYNDICATION_TTL = 90  # seconds a fetched timeline is reused in-process
 USER_AGENT = "x-tweet-fetcher/3.0"
 
 # Retry / backoff for upstream HTTP calls
@@ -64,3 +71,28 @@ def default_lang() -> str:
 
 def cache_dir() -> Path:
     return Path(os.environ.get("XTF_CACHE_DIR", "")) if os.environ.get("XTF_CACHE_DIR") else Path.home() / ".x-tweet-fetcher"
+
+
+def syndication_enabled() -> bool:
+    """Whether the login-free syndication backend joins the auto chain."""
+    raw = os.environ.get("XTF_SYNDICATION", "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
+
+
+def syndication_hosts() -> list[str]:
+    """Ordered syndication base URLs. Never empty."""
+    raw = os.environ.get("XTF_SYNDICATION_URL") or DEFAULT_SYNDICATION
+    out: list[str] = []
+    for part in raw.split(","):
+        norm = _normalize_instance(part)
+        if norm and norm not in out:
+            out.append(norm)
+    return out or [DEFAULT_SYNDICATION]
+
+
+def syndication_ttl() -> int:
+    """In-process timeline cache TTL in seconds (0 disables caching)."""
+    try:
+        return max(0, int(os.environ.get("XTF_SYNDICATION_TTL", DEFAULT_SYNDICATION_TTL)))
+    except ValueError:
+        return DEFAULT_SYNDICATION_TTL
