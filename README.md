@@ -164,6 +164,7 @@ Everything is an environment variable (CLI flags override):
 | `XTF_SYNDICATION` | `1` | Set to `0` to drop the login-free syndication backend from the auto chain |
 | `XTF_SYNDICATION_URL` | `https://syndication.twitter.com` | Comma-separated syndication base URLs (for a mirror/proxy) |
 | `XTF_SYNDICATION_TTL` | `90` | Seconds a fetched timeline is reused in-process (`0` disables caching) |
+| `XTF_WAIT_RATE_LIMIT` | `0` | Seconds to sleep waiting for a quota refill when a `429` carries a reset hint (`0` = fail fast) |
 | `XTF_BROWSER` | `camofox` | Browser driver: `camofox` or `playwright` |
 | `XTF_BROWSER_PORT` | `9377` | Camofox HTTP port |
 | `XTF_LANG` | `zh` | Message language: `zh` or `en` |
@@ -201,7 +202,21 @@ GitHub Actions (cron) -> xtf --user <name> -> snapshots/<name>.json -> committed
 - Writes `snapshots/<name>.json` plus `snapshots/latest.json`, then commits them as `github-actions[bot]`.
 - A failed fetch (e.g. the syndication quota is momentarily exhausted) is skipped with an Actions warning, **not** committed as a fake empty snapshot.
 
-Set `XTF_SYNDICATION: "0"` in the workflow env to force the Nitter path, and adjust `cron` to change the polling rate. Each runner uses a fresh egress IP, so the ~30 requests/window syndication quota is normally not a constraint.
+**Why CI needs `XTF_WAIT_RATE_LIMIT: "1500"`.** X caps the syndication endpoint at 30
+requests/window **per IP**, and every GitHub-hosted runner shares a small pool of
+datacenter egress addresses — a measured probe returned
+`429 x-rate-limit-limit: 30, x-rate-limit-remaining: 0` with a reset about 14 minutes out.
+The endpoint tells you when the quota refills, so the workflow sets a 25-minute wait
+budget: instead of failing, the fetch sleeps out the reset and retries. Verified on a real
+run — `fetching @nasa (limit 50)` → `tweets=19 backend=syndication` → committed
+`chore(snapshots): fetch tweets 2026-11-07T11:46Z`.
+
+`fxtwitter` (single tweets/profiles) is **not** rate limited this way and works from
+runners unmodified.
+
+Set `XTF_SYNDICATION: "0"` in the workflow env to force the Nitter path, and adjust `cron`
+to change the polling rate. Note that the widget page size varies per account: `nasa`
+served 19 tweets, `elonmusk` served 100 — `--limit` is an upper bound, not a guarantee.
 
 Consume the snapshot over raw HTTP, e.g.:
 

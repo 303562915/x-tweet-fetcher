@@ -24,15 +24,34 @@
   - 抓取 `--user <name> --limit <n>` 写入 `snapshots/<name>.json` 与 `snapshots/latest.json`
   - 由 `github-actions[bot]` 提交回仓库；失败时只告警不提交空快照
 
+### 新增：配额等待（`--wait-rate-limit`）
+
+- `RateLimited` 现在携带上游的配额提示：`reset_at`（`x-rate-limit-reset`）与
+  `retry_after`（`Retry-After`），并提供 `wait_seconds()`
+- `http.get_text` 解析上述响应头并注入异常
+- syndication 后端在 429 且 reset 在预算内时**睡眠等待配额刷新后重试**，
+  不再直接失败；`--wait-rate-limit SECONDS` / `XTF_WAIT_RATE_LIMIT` 控制预算
+  （默认 0 = 快速失败，workflow 设为 1500 秒）
+
+### 实测记录（2026-11-07）
+
+- GitHub runner 上 `api.fxtwitter.com` 可直连（HTTP 200），syndication 因**共享数据中心
+  IP 配额耗尽**返回 429（`x-rate-limit-limit: 30`、`remaining: 0`、reset 约 14 分钟后）
+- 开启等待预算后，workflow 实测成功：`fetching @nasa (limit 50)` →
+  `tweets=19 backend=syndication` → 由 bot 提交 `snapshots/nasa.json`（严格时间倒序）
+- 公开 Nitter 实例（28 个）与公共 CORS 代理（allorigins / codetabs / r.jina.ai）全部不可用
+- Playwright：headless Chromium 访问 x.com 返回 403；headed 可加载但 CI 无显示器且不稳定
+
 ### 测试
 
-- `tests/test_syndication.py`：20 个用例覆盖页面解析、转推/引用/媒体/时间归一化、模型字段输出
+- `tests/test_syndication.py`：24 个用例覆盖页面解析、转推/引用/媒体/时间归一化、
+  时间倒序排序、模型字段输出、配额等待与预算边界
 - `tests/test_core.py::test_router_mode_chains`：更新为四后端链路，并覆盖 `XTF_SYNDICATION=0`
-- 全量：117 passed（本机 Windows 下 2 个 `test_cli.py` 用例因 subprocess 输出解码跳过，见已知边界）
+- 全量：125 passed
 
 ### 文档
 
-- README / SKILL.md：四后端表格、syndication 限流说明（约 30 次/窗口）、GitHub Actions 章节
+- README / SKILL.md：四后端表格、syndication 限流与等待机制、页大小差异、GitHub Actions 章节
 
 ---
 
