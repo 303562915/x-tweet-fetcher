@@ -12,8 +12,12 @@ name: Fetch X timeline
 # It also commits the result back, so each run is both a fetch and a snapshot.
 
 on:
-  schedule:
-    - cron: "0 * * * *" # hourly
+  # Scheduled runs are paused: on GitHub-hosted runners X answers the
+  # login-free endpoints with 429 (the x.com profile page does not even report
+  # a reset time), so an hourly job would only fail. Re-enable this line once a
+  # credential-backed backend is wired up.
+  # schedule:
+  #   - cron: "0 * * * *" # hourly
   workflow_dispatch:
     inputs:
       username:
