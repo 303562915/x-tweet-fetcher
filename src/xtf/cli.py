@@ -102,6 +102,10 @@ def build_parser() -> argparse.ArgumentParser:
                              "auto (syndication -> nitter -> browser)")
     parser.add_argument("--browser-driver", choices=["camofox", "playwright"], default=None,
                         help="Browser driver (default: XTF_BROWSER env or camofox)")
+    parser.add_argument("--wait-rate-limit", type=int, default=None, metavar="SECONDS",
+                        help="Sleep up to SECONDS for an upstream quota to refill instead of "
+                             "failing on 429 (default: XTF_WAIT_RATE_LIMIT or 0). "
+                             "Useful in CI, where the shared syndication quota is often spent.")
     parser.add_argument("--ledger", metavar="DB",
                         help="SQLite ledger DB. With a fetch mode: archive results after fetch. "
                              "With --query/--stats: search/inspect the archive without fetching.")
@@ -166,6 +170,7 @@ def main(argv=None) -> None:
         browser_driver=args.browser_driver,
         browser_port=args.port,
         browser_nitter=nitter_instances[0] if nitter_instances else None,
+        wait_rate_limit=args.wait_rate_limit,
     )
 
     # ── Mode: Search ─────────────────────────────────────────────────────

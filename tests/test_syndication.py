@@ -2,11 +2,12 @@
 from __future__ import annotations
 
 import json
+import time
 from datetime import datetime, timezone
 
 import pytest
 
-from xtf.exceptions import UpstreamDown
+from xtf.exceptions import RateLimited, UpstreamDown
 from xtf.models import Tweet
 from xtf.parsers.syndication_json import (
     extract_entries,
@@ -228,3 +229,72 @@ def test_extract_timeline_user_prefers_entry_user():
     data = parse_next_data(_page([_tweet()], user={"screen_name": "header"}))
     assert extract_timeline_user(data)["screen_name"] == "someone"
     assert extract_timeline_user({"props": {"pageProps": {}}}) == {}
+
+
+# ── rate-limit waiting ───────────────────────────────────────────────────
+def test_rate_limited_wait_seconds():
+    now = 1_000.0
+    assert RateLimited("x", reset_at=1_030.0).wait_seconds(now) == 31
+    assert RateLimited("x", retry_after=5).wait_seconds(now) == 5
+    # already past the reset — no sleep needed
+    assert RateLimited("x", reset_at=900.0).wait_seconds(now) == 0
+    # nothing to go on
+    assert RateLimited("x").wait_seconds(now) is None
+
+
+def test_syndication_waits_for_quota_then_succeeds(monkeypatch, capsys):
+    """A 429 carrying x-rate-limit-reset is slept out when a budget allows."""
+    from xtf import http as http_mod
+    from xtf.backends.syndication import SyndicationBackend
+
+    calls = {"n": 0}
+    slept: list[float] = []
+
+    def fake_get(url, **kwargs):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise RateLimited("HTTP 429", reset_at=time.time() + 7)
+        return _page([_tweet()])
+
+    monkeypatch.setattr(http_mod, "get_text", fake_get)
+    monkeypatch.setattr(time, "sleep", lambda s: slept.append(s))
+
+    backend = SyndicationBackend(wait_budget=60)
+    tweets = backend.fetch_timeline("someone", limit=5)
+
+    assert calls["n"] == 2
+    assert len(slept) == 1 and 1 <= slept[0] <= 10
+    assert len(tweets) == 1 and tweets[0].tweet_id == "1001"
+
+
+def test_syndication_fails_fast_without_budget(monkeypatch):
+    """Without a wait budget the backend must not sleep at all."""
+    from xtf import http as http_mod
+    from xtf.backends.syndication import SyndicationBackend
+
+    slept: list[float] = []
+    monkeypatch.setattr(http_mod, "get_text", lambda url, **kw: (_ for _ in ()).throw(
+        RateLimited("HTTP 429", reset_at=time.time() + 600)))
+    monkeypatch.setattr(time, "sleep", lambda s: slept.append(s))
+
+    backend = SyndicationBackend(wait_budget=0)
+    with pytest.raises(UpstreamDown) as ei:
+        backend.fetch_timeline("someone", limit=5)
+    assert not slept
+    assert "quota exhausted" in str(ei.value)
+
+
+def test_syndication_does_not_wait_beyond_budget(monkeypatch):
+    """A reset further out than the budget fails immediately instead."""
+    from xtf import http as http_mod
+    from xtf.backends.syndication import SyndicationBackend
+
+    slept: list[float] = []
+    monkeypatch.setattr(http_mod, "get_text", lambda url, **kw: (_ for _ in ()).throw(
+        RateLimited("HTTP 429", reset_at=time.time() + 900)))
+    monkeypatch.setattr(time, "sleep", lambda s: slept.append(s))
+
+    backend = SyndicationBackend(wait_budget=60)
+    with pytest.raises(UpstreamDown):
+        backend.fetch_timeline("someone", limit=5)
+    assert not slept

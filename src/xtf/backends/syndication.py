@@ -45,10 +45,14 @@ class SyndicationBackend(Backend):
     name = "syndication"
 
     def __init__(self, hosts: list[str] | None = None, timeout: int = 30,
-                 cache_ttl: int | None = None):
+                 cache_ttl: int | None = None, wait_budget: int | None = None):
         self.hosts = hosts or config.syndication_hosts()
         self.timeout = timeout
         self.cache_ttl = config.syndication_ttl() if cache_ttl is None else cache_ttl
+        #: Seconds this backend may sleep waiting for the shared quota to
+        #: refill. X reports the reset time in ``x-rate-limit-reset``; a CI job
+        #: can afford to wait, an interactive call usually cannot.
+        self.wait_budget = config.rate_limit_wait() if wait_budget is None else wait_budget
         self._cache: dict[str, tuple[float, dict]] = {}
 
     # ── page fetching ────────────────────────────────────────────────────
@@ -58,6 +62,27 @@ class SyndicationBackend(Backend):
         if not clean:
             raise InvalidInput("syndication: empty username")
         return clean
+
+    def _get_html(self, url: str) -> str:
+        """GET a page, sleeping out a quota reset when we are allowed to.
+
+        The syndication endpoint answers ``429`` with ``x-rate-limit-reset``
+        once its shared per-IP quota (30/window) is gone. Waiting that long is
+        pointless interactively, but exactly right in CI — so the wait is
+        opt-in through ``XTF_WAIT_RATE_LIMIT`` / ``--wait-rate-limit``.
+        """
+        budget = self.wait_budget
+        while True:
+            try:
+                return http.get_text(url, headers=_HEADERS, timeout=self.timeout, retries=1)
+            except RateLimited as e:
+                wait = e.wait_seconds()
+                if not budget or wait is None or wait > budget:
+                    raise
+                print(f"[syndication] quota exhausted, {wait}s until reset — waiting",
+                      file=sys.stderr)
+                time.sleep(wait)
+                budget -= wait
 
     def _fetch_page(self, username: str) -> dict:
         """GET and parse the timeline page, with failover across hosts."""
@@ -70,16 +95,17 @@ class SyndicationBackend(Backend):
         for host in self.hosts:
             url = f"{host}/srv/timeline-profile/screen-name/{username}"
             try:
-                html = http.get_text(url, headers=_HEADERS, timeout=self.timeout, retries=1)
+                html = self._get_html(url)
             except XtfError as e:
                 if isinstance(e, RateLimited):
                     # Reported as "30 requests per window" by X; the quota is
-                    # keyed per client fingerprint + IP, so a busy network can
-                    # exhaust it while other clients keep working.
+                    # keyed per IP, so a busy shared egress (CI runners, cloud
+                    # proxies) can exhaust it while other clients keep working.
+                    hint = e.wait_seconds()
+                    when = f" (refills in ~{hint}s)" if hint else ""
                     errors[host] = (
-                        "rate_limited: syndication quota exhausted "
-                        "(X allows ~30 hits/window per client; header x-rate-limit-reset "
-                        "tells when it refills) — retry later, or set "
+                        f"rate_limited: syndication quota exhausted{when} — retry later, "
+                        "raise --wait-rate-limit to sleep it out, or set "
                         "XTF_SYNDICATION=0 to use Nitter instead"
                     )
                 else:

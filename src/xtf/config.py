@@ -15,6 +15,10 @@
   XTF_SYNDICATION_URL
                     Comma-separated syndication base URLs, tried in order.
                     Default: https://syndication.twitter.com (X-owned).
+  XTF_WAIT_RATE_LIMIT
+                    Seconds a backend may sleep waiting for an upstream quota
+                    to refill when the response carries a reset hint
+                    (default 0 = fail fast; CI sets several hundred).
 """
 from __future__ import annotations
 
@@ -25,6 +29,7 @@ DEFAULT_NITTER = "http://127.0.0.1:8788"
 DEFAULT_BROWSER_PORT = 9377
 DEFAULT_SYNDICATION = "https://syndication.twitter.com"
 DEFAULT_SYNDICATION_TTL = 90  # seconds a fetched timeline is reused in-process
+DEFAULT_RATE_LIMIT_WAIT = 0   # seconds allowed to wait out a quota reset
 USER_AGENT = "x-tweet-fetcher/3.0"
 
 # Retry / backoff for upstream HTTP calls
@@ -96,3 +101,11 @@ def syndication_ttl() -> int:
         return max(0, int(os.environ.get("XTF_SYNDICATION_TTL", DEFAULT_SYNDICATION_TTL)))
     except ValueError:
         return DEFAULT_SYNDICATION_TTL
+
+
+def rate_limit_wait() -> int:
+    """Seconds a backend may sleep for a quota refill (0 = fail fast)."""
+    try:
+        return max(0, int(os.environ.get("XTF_WAIT_RATE_LIMIT", DEFAULT_RATE_LIMIT_WAIT)))
+    except ValueError:
+        return DEFAULT_RATE_LIMIT_WAIT

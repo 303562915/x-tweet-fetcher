@@ -41,11 +41,12 @@ class Router:
                  nitter_instances: list[str] | None = None,
                  browser_driver: str | None = None,
                  browser_port: int | None = None,
-                 browser_nitter: str | None = None):
+                 browser_nitter: str | None = None,
+                 wait_rate_limit: int | None = None):
         """backend: 'auto' | 'syndication' | 'nitter' | 'browser'."""
         self.mode = backend
         self.fxtwitter = FxTwitterBackend()
-        self.syndication = SyndicationBackend()
+        self.syndication = SyndicationBackend(wait_budget=wait_rate_limit)
         self.nitter = NitterBackend(instances=nitter_instances)
         self.browser = BrowserBackend(driver=browser_driver, port=browser_port,
                                       nitter_instance=browser_nitter)

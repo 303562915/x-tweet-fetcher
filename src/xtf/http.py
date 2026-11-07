@@ -21,6 +21,35 @@ from .exceptions import NotFound, RateLimited, UpstreamDown
 _MAX_BODY = 10 * 1024 * 1024
 
 
+def _header_number(headers, name: str) -> float | None:
+    """Read a numeric response header, tolerating absence and junk."""
+    try:
+        raw = headers.get(name) if headers else None
+    except Exception:  # exotic header containers
+        return None
+    if raw in (None, ""):
+        return None
+    try:
+        return float(str(raw).strip())
+    except (TypeError, ValueError):
+        return None
+
+
+def _rate_limit_error(url: str, code: int, headers) -> RateLimited:
+    """Build a RateLimited carrying whatever quota hints the upstream sent.
+
+    ``x-rate-limit-reset`` (X/Twitter, Unix timestamp) and ``Retry-After``
+    (seconds) are what let a caller wait for a refill instead of giving up.
+    """
+    reset_at = _header_number(headers, "x-rate-limit-reset")
+    retry_after = _header_number(headers, "Retry-After")
+    return RateLimited(
+        f"HTTP {code} — {url}",
+        reset_at=reset_at,
+        retry_after=int(retry_after) if retry_after is not None else None,
+    )
+
+
 def get_text(url: str, headers: dict[str, str] | None = None,
              timeout: int = 15, retries: int = RETRY_ATTEMPTS) -> str:
     """GET a URL, return the response body as text. Raises typed errors."""
@@ -38,7 +67,7 @@ def get_text(url: str, headers: dict[str, str] | None = None,
             if e.code == 404:
                 raise NotFound(f"HTTP 404 — {url}") from e
             if e.code in (403, 429):
-                last_exc = RateLimited(f"HTTP {e.code} — {url}")
+                last_exc = _rate_limit_error(url, e.code, e.headers)
             elif e.code >= 500:
                 last_exc = UpstreamDown(f"HTTP {e.code} — {url}")
             else:

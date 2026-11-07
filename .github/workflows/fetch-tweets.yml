@@ -44,12 +44,18 @@ jobs:
 
       - name: Fetch timeline
         id: fetch
+        timeout-minutes: 45
         env:
           # Manual runs use the inputs; scheduled runs fall back to the defaults.
           XTF_USERNAME: ${{ github.event.inputs.username || 'elonmusk' }}
           XTF_LIMIT: ${{ github.event.inputs.limit || '50' }}
           # Set to 0 to force the Nitter path instead of the syndication endpoint.
           XTF_SYNDICATION: "1"
+          # X caps syndication at 30 requests/window per IP, and GitHub's shared
+          # runner pool routinely has none left. The endpoint reports when the
+          # quota refills (x-rate-limit-reset), so sleep that out rather than
+          # failing the run — up to 25 minutes.
+          XTF_WAIT_RATE_LIMIT: "1500"
         run: |
           set -o pipefail
           mkdir -p snapshots

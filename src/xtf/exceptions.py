@@ -6,6 +6,8 @@ output as ``error.code``, so agent callers can branch on it.
 """
 from __future__ import annotations
 
+import time
+
 
 class XtfError(Exception):
     """Base class for all x-tweet-fetcher errors."""
@@ -33,9 +35,29 @@ class NotFound(XtfError):
 
 
 class RateLimited(XtfError):
-    """Upstream returned 429/403 — retry later or switch instance."""
+    """Upstream returned 429/403 — retry later or switch instance.
+
+    Upstreams that publish their quota state let the caller wait instead of
+    failing outright: ``reset_at`` is the Unix timestamp from
+    ``x-rate-limit-reset`` and ``retry_after`` the seconds from ``Retry-After``.
+    """
 
     code = "rate_limited"
+
+    def __init__(self, message: str = "", reset_at: float | None = None,
+                 retry_after: int | None = None):
+        super().__init__(message)
+        self.reset_at = reset_at
+        self.retry_after = retry_after
+
+    def wait_seconds(self, now: float | None = None) -> int | None:
+        """Seconds to sleep before retrying, or None when upstream said nothing."""
+        if self.retry_after is not None:
+            return max(0, int(self.retry_after))
+        if self.reset_at is not None:
+            current = time.time() if now is None else now
+            return max(0, int(self.reset_at - current) + 1)
+        return None
 
 
 class UpstreamDown(XtfError):
