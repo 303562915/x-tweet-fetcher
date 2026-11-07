@@ -19,6 +19,8 @@
                     Seconds a backend may sleep waiting for an upstream quota
                     to refill when the response carries a reset hint
                     (default 0 = fail fast; CI sets several hundred).
+  XTF_XCOM          Set to 0/false/off to drop the logged-out x.com profile
+                    backend from the auto chain (default: on).
 """
 from __future__ import annotations
 
@@ -109,3 +111,9 @@ def rate_limit_wait() -> int:
         return max(0, int(os.environ.get("XTF_WAIT_RATE_LIMIT", DEFAULT_RATE_LIMIT_WAIT)))
     except ValueError:
         return DEFAULT_RATE_LIMIT_WAIT
+
+
+def xcom_enabled() -> bool:
+    """Whether the logged-out x.com profile backend joins the auto chain."""
+    raw = os.environ.get("XTF_XCOM", "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")

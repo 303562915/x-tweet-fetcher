@@ -2,25 +2,28 @@ name: Fetch X timeline
 
 # Scheduled X/Twitter timeline fetch — no login, no API key, no Nitter needed.
 #
-#   GitHub Actions -> x-tweet-fetcher (syndication backend) -> data/<user>.json
+#   GitHub Actions -> x-tweet-fetcher (xcom backend) -> snapshots/<user>.json
 #
-# Runs every 6 hours and can be triggered by hand from the Actions tab.
-# The result is committed back to the repository, so each run adds a new
-# snapshot that downstream tooling (or an agent) can read over raw HTTP.
+# A logged-out profile page only embeds the first screen of tweets (measured:
+# ~3-5), so this job accumulates: every run merges what it fetched into the
+# existing snapshot, dedupes by tweet_id, sorts by absolute time and keeps the
+# newest `limit`. Running hourly builds a rolling window of the last N posts.
+#
+# It also commits the result back, so each run is both a fetch and a snapshot.
 
 on:
   schedule:
-    - cron: "0 */6 * * *" # 00:00 / 06:00 / 12:00 / 18:00 UTC
+    - cron: "0 * * * *" # hourly
   workflow_dispatch:
     inputs:
       username:
         description: "X username without @"
         required: true
-        default: "elonmusk"
+        default: "aleabitoreddit"
       limit:
-        description: "Max tweets to keep (the widget page carries up to 100)"
+        description: "How many recent posts the snapshot keeps"
         required: true
-        default: "50"
+        default: "30"
 
 permissions:
   contents: write
@@ -42,57 +45,83 @@ jobs:
       - name: Install x-tweet-fetcher
         run: pip install -e .
 
-      - name: Fetch timeline
+      - name: Fetch and merge
         id: fetch
         timeout-minutes: 45
         env:
           # Manual runs use the inputs; scheduled runs fall back to the defaults.
-          XTF_USERNAME: ${{ github.event.inputs.username || 'elonmusk' }}
-          XTF_LIMIT: ${{ github.event.inputs.limit || '50' }}
-          # Set to 0 to force the Nitter path instead of the syndication endpoint.
-          XTF_SYNDICATION: "1"
-          # X caps syndication at 30 requests/window per IP, and GitHub's shared
-          # runner pool routinely has none left. The endpoint reports when the
-          # quota refills (x-rate-limit-reset), so sleep that out rather than
-          # failing the run — up to 25 minutes.
+          XTF_USERNAME: ${{ github.event.inputs.username || 'aleabitoreddit' }}
+          XTF_LIMIT: ${{ github.event.inputs.limit || '30' }}
+          # The syndication fallback reports when its shared 30/window quota
+          # refills; sleep that out rather than failing the run (max 25 min).
           XTF_WAIT_RATE_LIMIT: "1500"
         run: |
           set -o pipefail
           mkdir -p snapshots
 
           echo "fetching @${XTF_USERNAME} (limit ${XTF_LIMIT})"
-          if xtf --user "${XTF_USERNAME}" --limit "${XTF_LIMIT}" --pretty \
-               > "snapshots/${XTF_USERNAME}.json" 2> "${RUNNER_TEMP}/fetch.err"; then
-            cp "snapshots/${XTF_USERNAME}.json" snapshots/latest.json
-            echo "ok=1" >> "$GITHUB_OUTPUT"
-          else
-            # Keep the failure visible: no fake empty snapshot is committed,
-            # the stderr is surfaced, and the job goes red so the run is not
-            # mistaken for a successful fetch.
-            rm -f "snapshots/${XTF_USERNAME}.json"
-            echo "ok=0" >> "$GITHUB_OUTPUT"
+          if ! xtf --user "${XTF_USERNAME}" --limit "${XTF_LIMIT}" --pretty \
+                 > "${RUNNER_TEMP}/fetched.json" 2> "${RUNNER_TEMP}/fetch.err"; then
             echo "::error::fetch failed for @${XTF_USERNAME}"
             cat "${RUNNER_TEMP}/fetch.err"
             exit 1
           fi
+          cat "${RUNNER_TEMP}/fetch.err"
 
           python - <<'PY'
-          import json, os, pathlib
+          import json
+          import os
+          import pathlib
+          from datetime import datetime, timezone
 
-          path = pathlib.Path("snapshots") / f"{os.environ['XTF_USERNAME']}.json"
-          if path.exists():
-              payload = json.loads(path.read_text(encoding="utf-8"))
-              print(f"tweets={payload.get('count')} backend={payload.get('backend')}")
+          TWITTER_TIME = "%a %b %d %H:%M:%S %z %Y"
+          user = os.environ["XTF_USERNAME"]
+          limit = int(os.environ["XTF_LIMIT"])
+          target = pathlib.Path("snapshots") / f"{user}.json"
+
+          def load(path):
+              try:
+                  return json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+              except (OSError, ValueError):
+                  return {}
+
+          fresh = load(os.environ["RUNNER_TEMP"] + "/fetched.json")
+          previous = load(target)
+
+          merged = {}
+          for tweet in (previous.get("tweets") or []) + (fresh.get("tweets") or []):
+              tid = str(tweet.get("tweet_id") or "")
+              if tid:
+                  merged[tid] = tweet
+
+          def stamp(tweet):
+              try:
+                  return datetime.strptime(tweet.get("created_at", ""), TWITTER_TIME).timestamp()
+              except (ValueError, TypeError):
+                  return 0.0
+
+          tweets = sorted(merged.values(), key=stamp, reverse=True)[:limit]
+          payload = {
+              "username": user,
+              "count": len(tweets),
+              "backend": fresh.get("backend"),
+              "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "tweets": tweets,
+          }
+          text = json.dumps(payload, ensure_ascii=False, indent=2)
+          target.write_text(text, encoding="utf-8")
+          pathlib.Path("snapshots/latest.json").write_text(text, encoding="utf-8")
+          print(f"fetched={fresh.get('count')} kept={len(tweets)} "
+                f"known={len(merged)} backend={fresh.get('backend')}")
           PY
 
       - name: Commit snapshot
-        if: steps.fetch.outputs.ok == '1'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add snapshots
           if git diff --staged --quiet; then
-            echo "no change — timeline identical to the last snapshot"
+            echo "no change — no new posts since the last snapshot"
             exit 0
           fi
           git commit -m "chore(snapshots): fetch tweets $(date -u +%Y-%m-%dT%H:%MZ)"

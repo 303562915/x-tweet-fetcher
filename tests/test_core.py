@@ -110,10 +110,14 @@ def test_router_mode_chains(monkeypatch):
     assert [b.name for b in r._chain()] == ["browser"]
     r = Router(backend="syndication")
     assert [b.name for b in r._chain()] == ["syndication"]
+    r = Router(backend="xcom")
+    assert [b.name for b in r._chain()] == ["xcom"]
     r = Router(backend="auto")
-    assert [b.name for b in r._chain()] == ["syndication", "nitter", "browser"]
-    # XTF_SYNDICATION=0 removes the login-free backend from the auto chain.
+    assert [b.name for b in r._chain()] == ["xcom", "syndication", "nitter", "browser"]
+    # Each login-free backend can be dropped from the auto chain on its own.
     monkeypatch.setenv("XTF_SYNDICATION", "0")
+    assert [b.name for b in Router(backend="auto")._chain()] == ["xcom", "nitter", "browser"]
+    monkeypatch.setenv("XTF_XCOM", "0")
     assert [b.name for b in Router(backend="auto")._chain()] == ["nitter", "browser"]
 
 

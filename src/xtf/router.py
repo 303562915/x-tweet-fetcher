@@ -24,6 +24,7 @@ from .backends.browser import BrowserBackend
 from .backends.fxtwitter import FxTwitterBackend
 from .backends.nitter import NitterBackend
 from .backends.syndication import SyndicationBackend
+from .backends.xcom import XcomBackend
 from .exceptions import (
     AllBackendsFailed,
     BackendUnavailable,
@@ -46,6 +47,7 @@ class Router:
         """backend: 'auto' | 'syndication' | 'nitter' | 'browser'."""
         self.mode = backend
         self.fxtwitter = FxTwitterBackend()
+        self.xcom = XcomBackend()
         self.syndication = SyndicationBackend(wait_budget=wait_rate_limit)
         self.nitter = NitterBackend(instances=nitter_instances)
         self.browser = BrowserBackend(driver=browser_driver, port=browser_port,
@@ -53,15 +55,19 @@ class Router:
 
     # ── chain construction ───────────────────────────────────────────────
     def _chain(self) -> list[Backend]:
+        if self.mode == "xcom":
+            return [self.xcom]
         if self.mode == "nitter":
             return [self.nitter]
         if self.mode == "browser":
             return [self.browser]
         if self.mode == "syndication":
             return [self.syndication]
-        # auto: syndication first (no login, no Nitter instance required),
-        # then Nitter, then the browser as the last resort.
+        # auto: xcom first (a short but *current* timeline), then syndication
+        # (longer but possibly stale), then Nitter, then the browser.
         chain: list[Backend] = []
+        if config.xcom_enabled():
+            chain.append(self.xcom)
         if config.syndication_enabled():
             chain.append(self.syndication)
         chain += [self.nitter, self.browser]
