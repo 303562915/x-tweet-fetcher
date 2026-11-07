@@ -96,12 +96,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--nitter", default=None,
                         help="Nitter instance(s), comma-separated. Overrides XTF_NITTER.")
     parser.add_argument("--backend",
-                        choices=["auto", "xcom", "syndication", "nitter", "browser"],
+                        choices=["auto", "xauth", "xcom", "syndication", "nitter", "browser"],
                         default="auto",
-                        help="Backend: xcom (logged-out x.com profile page, current but "
-                             "short), syndication (widget endpoint, longer but may be "
-                             "stale), nitter (direct HTTP), browser (Camofox/Playwright), "
-                             "auto (xcom -> syndication -> nitter -> browser)")
+                        help="Backend: xauth (signed-in GraphQL, full timeline — needs "
+                             "XTF_AUTH_TOKEN/XTF_CT0), xcom (logged-out x.com profile page, "
+                             "current but short), syndication (widget endpoint, longer but may "
+                             "be stale), nitter (direct HTTP), browser "
+                             "(Camofox/Playwright), auto (xauth -> xcom -> syndication -> "
+                             "nitter -> browser)")
     parser.add_argument("--browser-driver", choices=["camofox", "playwright"], default=None,
                         help="Browser driver (default: XTF_BROWSER env or camofox)")
     parser.add_argument("--wait-rate-limit", type=int, default=None, metavar="SECONDS",

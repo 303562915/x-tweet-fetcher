@@ -24,6 +24,7 @@ from .backends.browser import BrowserBackend
 from .backends.fxtwitter import FxTwitterBackend
 from .backends.nitter import NitterBackend
 from .backends.syndication import SyndicationBackend
+from .backends.xauth import XAuthBackend
 from .backends.xcom import XcomBackend
 from .exceptions import (
     AllBackendsFailed,
@@ -47,6 +48,7 @@ class Router:
         """backend: 'auto' | 'syndication' | 'nitter' | 'browser'."""
         self.mode = backend
         self.fxtwitter = FxTwitterBackend()
+        self.xauth = XAuthBackend()
         self.xcom = XcomBackend(wait_budget=wait_rate_limit)
         self.syndication = SyndicationBackend(wait_budget=wait_rate_limit)
         self.nitter = NitterBackend(instances=nitter_instances)
@@ -55,6 +57,8 @@ class Router:
 
     # ── chain construction ───────────────────────────────────────────────
     def _chain(self) -> list[Backend]:
+        if self.mode == "xauth":
+            return [self.xauth]
         if self.mode == "xcom":
             return [self.xcom]
         if self.mode == "nitter":
@@ -63,9 +67,12 @@ class Router:
             return [self.browser]
         if self.mode == "syndication":
             return [self.syndication]
-        # auto: xcom first (a short but *current* timeline), then syndication
-        # (longer but possibly stale), then Nitter, then the browser.
+        # auto: authenticated first when cookies are configured (complete
+        # timeline, works from datacenter IPs), then xcom (short but current),
+        # then syndication (longer but possibly stale), then Nitter, browser.
         chain: list[Backend] = []
+        if config.xauth_enabled() and self.xauth.available():
+            chain.append(self.xauth)
         if config.xcom_enabled():
             chain.append(self.xcom)
         if config.syndication_enabled():

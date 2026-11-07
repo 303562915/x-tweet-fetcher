@@ -29,6 +29,9 @@ Homepage = "https://github.com/ythx-101/x-tweet-fetcher"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+xtf = ["data/*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]

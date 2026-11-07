@@ -12,12 +12,10 @@ name: Fetch X timeline
 # It also commits the result back, so each run is both a fetch and a snapshot.
 
 on:
-  # Scheduled runs are paused: on GitHub-hosted runners X answers the
-  # login-free endpoints with 429 (the x.com profile page does not even report
-  # a reset time), so an hourly job would only fail. Re-enable this line once a
-  # credential-backed backend is wired up.
-  # schedule:
-  #   - cron: "0 * * * *" # hourly
+  # Hourly accumulation. The xauth backend is a *signed-in* GraphQL call, so
+  # unlike the anonymous endpoints it is not blocked from datacenter IPs.
+  schedule:
+    - cron: "0 * * * *" # hourly
   workflow_dispatch:
     inputs:
       username:
@@ -31,7 +29,7 @@ on:
       backend:
         description: "Backend to fetch with"
         required: false
-        default: "xcom"
+        default: "xauth"
 
 permissions:
   contents: write
@@ -60,9 +58,14 @@ jobs:
           # Manual runs use the inputs; scheduled runs fall back to the defaults.
           XTF_USERNAME: ${{ github.event.inputs.username || 'aleabitoreddit' }}
           XTF_LIMIT: ${{ github.event.inputs.limit || '30' }}
-          # Pin the backend: falling back to syndication here would silently
-          # replace a current timeline with year-old "featured" tweets.
-          XTF_BACKEND: ${{ github.event.inputs.backend || 'xcom' }}
+          # xauth paginates the real timeline over plain HTTP with the signed-in
+          # session; xcom/syndication would silently return far fewer (or stale)
+          # tweets, so the backend is pinned.
+          XTF_BACKEND: ${{ github.event.inputs.backend || 'xauth' }}
+          # Repository secrets: the auth_token / ct0 cookies. Only the cron job
+          # reads them; nothing is written to the repository.
+          XTF_AUTH_TOKEN: ${{ secrets.XTF_AUTH_TOKEN }}
+          XTF_CT0: ${{ secrets.XTF_CT0 }}
           # Both X endpoints report when their shared quota refills; sleep that
           # out rather than failing the run (max 25 min).
           XTF_WAIT_RATE_LIMIT: "1500"

@@ -117,3 +117,19 @@ def xcom_enabled() -> bool:
     """Whether the logged-out x.com profile backend joins the auto chain."""
     raw = os.environ.get("XTF_XCOM", "1").strip().lower()
     return raw not in ("0", "false", "no", "off")
+
+
+def auth_token() -> str:
+    """The X ``auth_token`` cookie, if configured."""
+    return (os.environ.get("XTF_AUTH_TOKEN") or os.environ.get("X_AUTH_TOKEN") or "").strip()
+
+
+def ct0() -> str:
+    """The X ``ct0`` cookie (sent as x-csrf-token), if configured."""
+    return (os.environ.get("XTF_CT0") or os.environ.get("X_CT0") or "").strip()
+
+
+def xauth_enabled() -> bool:
+    """Whether the authenticated GraphQL backend may join the auto chain."""
+    raw = os.environ.get("XTF_XAUTH", "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
