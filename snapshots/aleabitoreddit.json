@@ -1,0 +1,40 @@
+{
+  "username": "aleabitoreddit",
+  "count": 2,
+  "backend": "syndication",
+  "updated_at": "2026-11-07T12:13:36Z",
+  "tweets": [
+    {
+      "author": "@aleabitoreddit",
+      "author_name": "Serenity",
+      "text": "Neocloud Earnings Today + Why Michael Burry is Wrong:\n\n$WULF - ER was positive, $17B TCV from 520 MW HPC capacity. \n\n240 MW JV in Texas for DC expansion + $5B financing. \n\nNothing special like $CIFR ER with AWS, just conf (eg. deal finances) and site dev.\n\n$CRWV - ER was bearish https://t.co/JtL7M2liXh",
+      "time_ago": "2025-11-11",
+      "likes": 125,
+      "retweets": 11,
+      "replies": 18,
+      "views": 46023,
+      "tweet_id": "1988048592754589970",
+      "media": [
+        "https://pbs.twimg.com/media/G5bzgK7aYAAkZ5D.jpg"
+      ],
+      "created_at": "Tue Nov 11 00:58:15 +0000 2025",
+      "lang": "en"
+    },
+    {
+      "author": "@aleabitoreddit",
+      "author_name": "Serenity",
+      "text": "Neocloud Ecosystem Cheat Sheet Part 1/2:\n\nBullet Point Positive vs. Negatives.\n\nFull List by Marketcap:\n\n$CRWV ($66.2B)\n$NBIS ($32.85B)\n$IREN ($16.52B)\n$APLD ($9.69B)\n$RIOT ($7.34B)\n$CIFR ($7.3B)\n$WULF ($6.36B)\n$HUT($5.39B)\n$CLSK ($5.01B)\n$HIVE ($1.74B CAD)\n$WYFI ($1.29B) https://t.co/z3HZ07q5wn",
+      "time_ago": "2025-11-02",
+      "likes": 554,
+      "retweets": 92,
+      "replies": 40,
+      "views": 365113,
+      "tweet_id": "1984837960735285593",
+      "media": [
+        "https://pbs.twimg.com/media/G4uPXwsaUAAWNHE.jpg"
+      ],
+      "created_at": "Sun Nov 02 04:20:21 +0000 2025",
+      "lang": "en"
+    }
+  ]
+}

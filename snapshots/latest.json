@@ -1,356 +1,40 @@
 {
-  "username": "nasa",
-  "limit": 50,
+  "username": "aleabitoreddit",
+  "count": 2,
+  "backend": "syndication",
+  "updated_at": "2026-11-07T12:13:36Z",
   "tweets": [
     {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "LIVE: President Donald J. Trump provides remarks to kick off MAX POWER—America’s newest aerospace expo and air show, taking place Nov. 7-8 @NASAKennedy: https://t.co/iX2v6vtTdQ https://t.co/VsbruOeJ9d",
-      "time_ago": "12h",
-      "likes": 580,
-      "retweets": 76,
-      "replies": 75,
-      "views": 295358,
-      "tweet_id": "2118841460791644434",
+      "author": "@aleabitoreddit",
+      "author_name": "Serenity",
+      "text": "Neocloud Earnings Today + Why Michael Burry is Wrong:\n\n$WULF - ER was positive, $17B TCV from 520 MW HPC capacity. \n\n240 MW JV in Texas for DC expansion + $5B financing. \n\nNothing special like $CIFR ER with AWS, just conf (eg. deal finances) and site dev.\n\n$CRWV - ER was bearish https://t.co/JtL7M2liXh",
+      "time_ago": "2025-11-11",
+      "likes": 125,
+      "retweets": 11,
+      "replies": 18,
+      "views": 46023,
+      "tweet_id": "1988048592754589970",
       "media": [
-        "https://pbs.twimg.com/media/HWeXAj-W8AAOjrT.jpg"
+        "https://pbs.twimg.com/media/G5bzgK7aYAAkZ5D.jpg"
       ],
-      "created_at": "Fri Nov 06 23:02:25 +0000 2026",
-      "lang": "en",
-      "urls": [
-        "https://www.whitehouse.gov/live/"
-      ]
-    },
-    {
-      "author": "@WhiteHouse",
-      "author_name": "The White House",
-      "text": "President Trump Delivers Remarks, Nov. 6, 2026 https://t.co/WI1K2HKnZS",
-      "time_ago": "13h",
-      "likes": 5083,
-      "retweets": 1234,
-      "replies": 525,
-      "views": 630088,
-      "tweet_id": "2118835779224944907",
-      "retweeted_by": "@NASA",
-      "created_at": "Fri Nov 06 22:39:50 +0000 2026",
-      "lang": "en",
-      "urls": [
-        "https://x.com/i/broadcasts/2WXEnkVgdjQXRr"
-      ],
-      "retweeted_status_id": "2118835779224944907"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "Nice shades. 😎\n\nThis sunshade will fly on NEO Surveyor, a spacecraft that will spot nearby asteroids and comets that ground-based telescopes might miss. The sunshade will help by harnessing the Sun’s power and blocking its blinding glare: https://t.co/YRl0x5EpVG https://t.co/WfEEHv9aOs",
-      "time_ago": "17h",
-      "likes": 1240,
-      "retweets": 156,
-      "replies": 104,
-      "views": 411354,
-      "tweet_id": "2118779276547756448",
-      "media": [
-        "https://pbs.twimg.com/media/HWdqhbrWkAAqwLU.jpg"
-      ],
-      "created_at": "Fri Nov 06 18:55:19 +0000 2026",
-      "lang": "en",
-      "urls": [
-        "https://go.nasa.gov/47Ze1GP"
-      ]
-    },
-    {
-      "author": "@NASAAdmin",
-      "author_name": "NASA Administrator Jared Isaacman",
-      "text": "Today, we’re excited to welcome @POTUS to @NASAKennedy as we begin building a global stage worthy of America’s leadership in aerospace.\n\nCAPEWEEK will be a great American gathering for the people and technologies shaping the future of aerospace, bringing together builders, https://t.co/Vjzo3aVqFk",
-      "time_ago": "17h",
-      "likes": 1879,
-      "retweets": 292,
-      "replies": 57,
-      "views": 187906,
-      "tweet_id": "2118774001023766961",
-      "media": [
-        "https://pbs.twimg.com/media/HWdlhY8WIAA-sP4.jpg",
-        "https://video.twimg.com/amplify_video/2118773774052978688/vid/avc1/1280x720/XMstuzWfAZh8S0Vf.mp4"
-      ],
-      "retweeted_by": "@NASA",
-      "created_at": "Fri Nov 06 18:34:21 +0000 2026",
-      "lang": "en",
-      "retweeted_status_id": "2118774001023766961"
-    },
-    {
-      "author": "@astro_anil",
-      "author_name": "Anil Menon",
-      "text": "A common axiom in spaceflight is to treat every launch, space walk, and opportunity like it may be your last.  I arrived at the international space station expecting to do zero space walks and hoping for one.  I've been fortunate to work with the teams across @nasa far more than https://t.co/mL11Q3b1HD",
-      "time_ago": "1d",
-      "likes": 1522,
-      "retweets": 168,
-      "replies": 38,
-      "views": 167348,
-      "tweet_id": "2118651228154409164",
-      "media": [
-        "https://pbs.twimg.com/media/HWb2EAYXQAAl3PF.jpg",
-        "https://pbs.twimg.com/media/HWb2EBjXkAAAFXv.jpg",
-        "https://pbs.twimg.com/media/HWb2EAxW0AAyDlm.jpg",
-        "https://pbs.twimg.com/media/HWb2EBEXwAAWVpD.jpg"
-      ],
-      "retweeted_by": "@NASA",
-      "created_at": "Fri Nov 06 10:26:30 +0000 2026",
-      "lang": "en",
-      "retweeted_status_id": "2118651228154409164"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "Flying high!\n\nToday, our X-59 quiet supersonic X-59 aircraft traveled from Birmingham, Alabama, to Daytona Beach, Florida. The aircraft aims to fly faster than sound with just a gentle thump rather than a sonic boom — helping usher in a new era of faster air travel.\n\nWe're https://t.co/OV4lxCW1tk",
-      "time_ago": "1d",
-      "likes": 18234,
-      "retweets": 2138,
-      "replies": 525,
-      "views": 1479510,
-      "tweet_id": "2118449337814352016",
-      "media": [
-        "https://pbs.twimg.com/media/HWY9OvvWoAA7DBr.jpg"
-      ],
-      "created_at": "Thu Nov 05 21:04:15 +0000 2026",
+      "created_at": "Tue Nov 11 00:58:15 +0000 2025",
       "lang": "en"
     },
     {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "@Space_Station @astro_anil @csa_asc NASA astronaut @Astro_Anil and @CSA_ASC astronaut are now safely in the airlock following their successful spacewalk. Astronauts @Astro_Watkins and Luke Delaney are waiting inside the @Space_Station to assist them out of their spacesuits. https://t.co/W8ujUN6xlf",
-      "time_ago": "1d",
-      "likes": 227,
-      "retweets": 14,
-      "replies": 3,
-      "views": 111486,
-      "tweet_id": "2118443154269503596",
+      "author": "@aleabitoreddit",
+      "author_name": "Serenity",
+      "text": "Neocloud Ecosystem Cheat Sheet Part 1/2:\n\nBullet Point Positive vs. Negatives.\n\nFull List by Marketcap:\n\n$CRWV ($66.2B)\n$NBIS ($32.85B)\n$IREN ($16.52B)\n$APLD ($9.69B)\n$RIOT ($7.34B)\n$CIFR ($7.3B)\n$WULF ($6.36B)\n$HUT($5.39B)\n$CLSK ($5.01B)\n$HIVE ($1.74B CAD)\n$WYFI ($1.29B) https://t.co/z3HZ07q5wn",
+      "time_ago": "2025-11-02",
+      "likes": 554,
+      "retweets": 92,
+      "replies": 40,
+      "views": 365113,
+      "tweet_id": "1984837960735285593",
       "media": [
-        "https://pbs.twimg.com/amplify_video_thumb/2118443065102794752/img/bDs9VmGWBVzvXmXz.jpg",
-        "https://video.twimg.com/amplify_video/2118443065102794752/vid/avc1/3840x2160/GJlnu2S7xZRKnJm0.mp4"
+        "https://pbs.twimg.com/media/G4uPXwsaUAAWNHE.jpg"
       ],
-      "created_at": "Thu Nov 05 20:39:41 +0000 2026",
-      "lang": "en",
-      "in_reply_to_status_id": "2118436047361393096"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "@Space_Station @astro_anil @csa_asc Now that the solar array has been successfully deployed, @Astro_Anil and Joshua Kutryk of @CSA_ASC will now clean up their work sites and head back to the airlock of the @Space_Station. https://t.co/LEWEzJ6RDm",
-      "time_ago": "1d",
-      "likes": 270,
-      "retweets": 26,
-      "replies": 9,
-      "views": 138259,
-      "tweet_id": "2118436047361393096",
-      "media": [
-        "https://pbs.twimg.com/amplify_video_thumb/2118435625200218112/img/d0uS5xx2dPgJKThF.jpg",
-        "https://video.twimg.com/amplify_video/2118435625200218112/vid/avc1/3840x2160/0BefbeBX3O42XBfJ.mp4"
-      ],
-      "created_at": "Thu Nov 05 20:11:26 +0000 2026",
-      "lang": "en",
-      "in_reply_to_status_id": "2118432880229486766"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "@Space_Station @astro_anil @csa_asc The final solar array is installed — and now unfurling.\n \nWhen this solar array is completely deployed, the @Space_Station will generate approximately 215 kW, boosting the orbiting laboratory’s power by up to 30%. https://t.co/YJ4eYTEEJ4",
-      "time_ago": "1d",
-      "likes": 181,
-      "retweets": 22,
-      "replies": 10,
-      "views": 63205,
-      "tweet_id": "2118432880229486766",
-      "media": [
-        "https://pbs.twimg.com/amplify_video_thumb/2118432649463103488/img/eAQagGer2yvEfmBl.jpg",
-        "https://video.twimg.com/amplify_video/2118432649463103488/vid/avc1/3840x2160/FY1ae0dOKNVQ-bJd.mp4"
-      ],
-      "created_at": "Thu Nov 05 19:58:51 +0000 2026",
-      "lang": "en",
-      "in_reply_to_status_id": "2118397868562071609"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "@Space_Station @astro_anil @csa_asc POV: Your office is in the sky. \n \n@Astro_Anil is seen moving toward his spacewalk teammate, Joshua Kutryk of @CSA_ASC, as Earth glows below. https://t.co/DCuuNRBCJM",
-      "time_ago": "1d",
-      "likes": 242,
-      "retweets": 27,
-      "replies": 8,
-      "views": 95576,
-      "tweet_id": "2118397868562071609",
-      "media": [
-        "https://pbs.twimg.com/amplify_video_thumb/2118397784684470272/img/jd3D4CZ8mj74hxWc.jpg",
-        "https://video.twimg.com/amplify_video/2118397784684470272/vid/avc1/3840x2160/oPY_-KbzS5qGaSjM.mp4"
-      ],
-      "created_at": "Thu Nov 05 17:39:44 +0000 2026",
-      "lang": "en",
-      "in_reply_to_status_id": "2118397716732776866"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "@Space_Station Teamwork! \n \n@Astro_Anil and Joshua Kutryk of @CSA_ASC have successfully unfolded the solar array, which is now extended to its full 20 ft width. https://t.co/vR48sOVF4F",
-      "time_ago": "1d",
-      "likes": 184,
-      "retweets": 14,
-      "replies": 6,
-      "views": 77014,
-      "tweet_id": "2118397716732776866",
-      "media": [
-        "https://pbs.twimg.com/amplify_video_thumb/2118397635396620288/img/qJtAgFajT0nwCZkA.jpg",
-        "https://video.twimg.com/amplify_video/2118397635396620288/vid/avc1/3840x2160/Dar7lt9JtLBE9qFZ.mp4"
-      ],
-      "created_at": "Thu Nov 05 17:39:08 +0000 2026",
-      "lang": "en",
-      "in_reply_to_status_id": "2118378879052120359"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "Today’s spacewalk is:\n\n-The 286th spacewalk supporting the @Space_Station’s assembly and maintenance\n-The 9th spacewalk of 2026\n-The second in one week (!) to support the installation of a solar array https://t.co/ygv8XDvEIc",
-      "time_ago": "1d",
-      "likes": 178,
-      "retweets": 19,
-      "replies": 6,
-      "views": 63564,
-      "tweet_id": "2118378879052120359",
-      "media": [
-        "https://pbs.twimg.com/amplify_video_thumb/2118378610973106176/img/smLI91UQn7dGeeog.jpg",
-        "https://video.twimg.com/amplify_video/2118378610973106176/vid/avc1/3840x2160/_OShoBxSA_7nZ4YL.mp4"
-      ],
-      "created_at": "Thu Nov 05 16:24:16 +0000 2026",
-      "lang": "en",
-      "in_reply_to_status_id": "2118358613248835782"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "The roll-out solar array is out of its carrier and on its way to where it'll be installed. https://t.co/bUBqUsxTIG",
-      "time_ago": "1d",
-      "likes": 330,
-      "retweets": 24,
-      "replies": 11,
-      "views": 130769,
-      "tweet_id": "2118358613248835782",
-      "media": [
-        "https://pbs.twimg.com/amplify_video_thumb/2118358250194075648/img/HCuMRtUgMzhXNxor.jpg",
-        "https://video.twimg.com/amplify_video/2118358250194075648/vid/avc1/3840x2160/ih_gqKJ5nF3s52ta.mp4"
-      ],
-      "created_at": "Thu Nov 05 15:03:45 +0000 2026",
-      "lang": "en",
-      "in_reply_to_status_id": "2118340671647949046"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "Off to work we go 🎵\n\n@astro_anil and @csa_asc's Joshua Kutryk have exited the space station and will begin their work installing the final roll-out solar array. https://t.co/D4n11ygLjg",
-      "time_ago": "1d",
-      "likes": 552,
-      "retweets": 66,
-      "replies": 36,
-      "views": 161269,
-      "tweet_id": "2118340671647949046",
-      "media": [
-        "https://pbs.twimg.com/amplify_video_thumb/2118340497634664448/img/7DVUpacLvt7LPaSK.jpg",
-        "https://video.twimg.com/amplify_video/2118340497634664448/vid/avc1/3840x2160/WBzwzv0TxubbkIpP.mp4"
-      ],
-      "created_at": "Thu Nov 05 13:52:27 +0000 2026",
-      "lang": "en",
-      "in_reply_to_status_id": "2118312556548784475"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "LIVE: Watch as @astro_anil and Joshua Kutryk of @csa_asc install the final roll-out solar array on the @space_station during a spacewalk that will last about seven hours. The solar arrays will boost power to the orbital lab. https://t.co/wAkkOdTJQR",
-      "time_ago": "2d",
-      "likes": 3186,
-      "retweets": 531,
-      "replies": 197,
-      "views": 1243703,
-      "tweet_id": "2118312556548784475",
-      "created_at": "Thu Nov 05 12:00:44 +0000 2026",
-      "lang": "en",
-      "urls": [
-        "https://x.com/i/broadcasts/2qVjWBPJdyoyEN"
-      ]
-    },
-    {
-      "author": "@NASAaero",
-      "author_name": "NASA Aeronautics",
-      "text": "🚨 BREAKING: Introducing X-70 Fractal, @NASA's newest experimental aircraft! \n\nThis crewed, modular aircraft will allow the agency to rapidly swap out internal &amp; external payloads to help keep pushing the frontiers of aviation technology! @nasaadmin\n\nDetails: https://t.co/RxEuIqvJpR",
-      "time_ago": "2d",
-      "likes": 8784,
-      "retweets": 1100,
-      "replies": 164,
-      "views": 771784,
-      "tweet_id": "2118163854769193353",
-      "media": [
-        "https://pbs.twimg.com/media/HWU6zNKXIAA5ClU.jpg"
-      ],
-      "retweeted_by": "@NASA",
-      "created_at": "Thu Nov 05 02:09:51 +0000 2026",
-      "lang": "en",
-      "retweeted_status_id": "2118163854769193353"
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "Earlier today, @astro_anil spoke from the International Space Station with @MarkRober, taking questions from students about life in space. Tune in: https://t.co/RkemqsKYNg https://t.co/XdZymV11nh",
-      "time_ago": "2d",
-      "likes": 1027,
-      "retweets": 129,
-      "replies": 98,
-      "views": 802278,
-      "tweet_id": "2118041009766678695",
-      "media": [
-        "https://pbs.twimg.com/media/HWSp9nzXsAAazfF.jpg"
-      ],
-      "created_at": "Wed Nov 04 18:01:42 +0000 2026",
-      "lang": "en",
-      "urls": [
-        "https://youtu.be/IhpBgLB8JUQ"
-      ]
-    },
-    {
-      "author": "@NASA",
-      "author_name": "NASA",
-      "text": "Join us for @astro_anil and @astro_kutryk’s next spacewalk!\n\nTune in here on Nov. 5 at 8:30am ET (1330 UTC) to watch the astronauts install and deploy the second of two new solar arrays on the @Space_Station. https://t.co/a1V5ciNgfD",
-      "time_ago": "2d",
-      "likes": 2876,
-      "retweets": 377,
-      "replies": 140,
-      "views": 517349,
-      "tweet_id": "2118034216503955710",
-      "media": [
-        "https://pbs.twimg.com/media/HWTE5NjXsAA5oDT.jpg",
-        "https://video.twimg.com/amplify_video/2118034167816466432/vid/avc1/1080x1920/LXm6bV8AbjnxPEnU.mp4?tag=16"
-      ],
-      "created_at": "Wed Nov 04 17:34:43 +0000 2026",
+      "created_at": "Sun Nov 02 04:20:21 +0000 2025",
       "lang": "en"
-    },
-    {
-      "author": "@LearnWithNASA",
-      "author_name": "Learn With NASA",
-      "text": "Ready for a special National STEM Day Q&amp;A? \n\nTune in tomorrow as students across the country connect live with @NASA astronaut @astro_anil aboard the @Space_Station and STEM creator @MarkRober: https://t.co/dRCf3NgDi5 https://t.co/1W1TGcNm1Z",
-      "time_ago": "3d",
-      "likes": 351,
-      "retweets": 43,
-      "replies": 8,
-      "views": 173100,
-      "tweet_id": "2117641114106609894",
-      "media": [
-        "https://pbs.twimg.com/media/HWNfXv5WgAADr9W.jpg"
-      ],
-      "retweeted_by": "@NASA",
-      "created_at": "Tue Nov 03 15:32:40 +0000 2026",
-      "lang": "en",
-      "urls": [
-        "https://www.nasa.gov/learning-resources/nasa-astronaut-stem-creator-connect-with-students-for-stem-day/"
-      ],
-      "retweeted_status_id": "2117641114106609894"
     }
-  ],
-  "count": 19,
-  "backend": "syndication",
-  "views_supplemented": true
+  ]
 }
