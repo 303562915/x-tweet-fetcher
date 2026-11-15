@@ -2,17 +2,34 @@
   "username": "aleabitoreddit",
   "count": 30,
   "backend": "xauth",
-  "updated_at": "2026-11-15T00:30:09Z",
+  "updated_at": "2026-11-15T07:20:44Z",
   "tweets": [
+    {
+      "author": "@aleabitoreddit",
+      "author_name": "Serenity",
+      "text": "Western media coverage of $NVDA and Jensen Huang have reached a point\n\nWhere it even gives Chinese people more pride in CCP state media.\n\nVery dark times for Western journalism. https://t.co/oJ8eEgOIDS",
+      "time_ago": "52m",
+      "likes": 639,
+      "retweets": 25,
+      "replies": 57,
+      "views": 78953,
+      "tweet_id": "2121852636261724398",
+      "media": [
+        "https://pbs.twimg.com/media/HXJVuXUaQAAVHFn.jpg",
+        "https://pbs.twimg.com/media/HXJVuXWbAAAtZsv.jpg"
+      ],
+      "created_at": "Sun Nov 15 06:27:45 +0000 2026",
+      "lang": "en"
+    },
     {
       "author": "@aleabitoreddit",
       "author_name": "Serenity",
       "text": "Altimeter and Atreides' letter to the board of $NVDA. https://t.co/vC4lgj6OxC",
       "time_ago": "1d",
-      "likes": 3056,
-      "retweets": 187,
-      "replies": 137,
-      "views": 350427,
+      "likes": 3116,
+      "retweets": 191,
+      "replies": 141,
+      "views": 366989,
       "tweet_id": "2121396827484524803",
       "media": [
         "https://pbs.twimg.com/media/HXC3KjVaYAA8pEG.jpg"
@@ -25,20 +42,20 @@
       "author_name": "Serenity",
       "text": "With Elon’s involvement, the odds of Jensen rejoining as $NVDA CEO just shot up.",
       "time_ago": "1d",
-      "likes": 3882,
-      "retweets": 142,
-      "replies": 142,
-      "views": 356075,
+      "likes": 3959,
+      "retweets": 146,
+      "replies": 144,
+      "views": 371422,
       "tweet_id": "2121349155457261991",
       "quoted_tweet": {
         "author": "@elonmusk",
         "author_name": "Elon Musk",
         "text": "@yunta_tsai A petition is underway to reinstate Jensen and I’m signing it too",
         "time_ago": "1d",
-        "likes": 223670,
-        "retweets": 19790,
-        "replies": 7316,
-        "views": 9848436,
+        "likes": 225539,
+        "retweets": 19963,
+        "replies": 7385,
+        "views": 10158465,
         "tweet_id": "2121345211959804234",
         "created_at": "Fri Nov 13 20:51:25 +0000 2026",
         "lang": "en",
@@ -53,10 +70,10 @@
       "author_name": "Serenity",
       "text": "It's been overwhelmingly negative recently, but here's some perspective on how supply-constrained demand from $LITE to $MU looks amid possible AI capex slowdowns. \n\nAs one Korean executive on memory puts it: \n\n\"Thirty people are already lined up at a restaurant that is full, and five of them leaving does not create a table.\"\n\nThe amount of tables might expand, but supply shortages and price hikes in bottlenecks can persist through capex slowdowns or capacity buildout. \n\nFrom AI implications in medicine, physics, materials, robotics, cybersecurity, engineering, energy, to AI itself over the next 5-10 years... \n\nWe've only reached the precipice of the next technological paradigm shift. \n\nThe world is going to need a lot more compute.",
       "time_ago": "1d",
-      "likes": 875,
-      "retweets": 42,
+      "likes": 899,
+      "retweets": 43,
       "replies": 47,
-      "views": 178542,
+      "views": 187853,
       "tweet_id": "2121338681571328368",
       "media": [
         "https://pbs.twimg.com/media/HXB7Qr9a8AAmE4N.jpg"
@@ -69,10 +86,10 @@
       "author_name": "Serenity",
       "text": "Be Jensen:\n\n> Asian American Dishwasher at Dennys\n> Founded $NVDA and pioneered GPU computing\n> Took an extraordinary gamble in CUDA, despite the company close to bankruptcy risk. \n> Bet paid off heavily, and Nvidia was there as the infrastructure for deep learning and generative AI. \n> Spent last 33 years of his life growing $NVDA, and finally saw it become a $5T+ company\n> Devoted his life to establishing American AI leadership \n> Started having more influence on policies that Washington conflicted with\n\n> Leaks and hit pieces happen all at once around midterms\n> Washington tries to push out others like Lutnick that shared similar China stances to Jensen. \n> Forced to resign by Taco Bell and NFL experience board members over unconfirmed Spy accusations + personal relationships. \n> Huang's leadership then questioned by politicians that ask how $META makes money or how Wifi works. \n> Slandered by US media that think because Mcdonalds did well under a CEO change, so can American semiconductors like $NVDA. \n\nThis feels like a horrible joke. Jensen Huang was the pinnacle of visionary tech CEOs and living the American dream.\n\nOusting Jensen Huang will go down as one of most consequential and darkest decisions in recent US history.",
       "time_ago": "1d",
-      "likes": 4552,
-      "retweets": 315,
-      "replies": 213,
-      "views": 322447,
+      "likes": 4636,
+      "retweets": 319,
+      "replies": 216,
+      "views": 335675,
       "tweet_id": "2121300436011590104",
       "created_at": "Fri Nov 13 17:53:30 +0000 2026",
       "lang": "en"
@@ -82,10 +99,10 @@
       "author_name": "Serenity",
       "text": "My personal opinion is that Kress leadership is negative for $NVDA centric ecosystems and its financing.\n\nCompanies like $COHR that supply everyone, with long term visibility are more isolated.\n\nAs for some of the commentary:\n\nKress reportedly “challenged some of Huang’s proposed investments in customers, including deals involving Lambda (Neocloud)”\n\nJensen later called her “A deer in the headlights”. \n\nAnd said she was “A reporting CFO”, not someone who is able to make strategic decisions… In regards to decisions made where Nvidia could build a moat against hyperscaler diversification.\n\nReports have also said CSP executives have now considered $AMD and $GOOGL TPUs following Jensen’s departure.\n\nBut didn’t do so earlier in fears of retaliation from Jensen Huang.",
       "time_ago": "1d",
-      "likes": 721,
+      "likes": 724,
       "retweets": 35,
       "replies": 75,
-      "views": 221102,
+      "views": 226048,
       "tweet_id": "2121265837000782035",
       "media": [
         "https://pbs.twimg.com/media/HXBACIqbkAAfgUs.jpg",
@@ -99,7 +116,7 @@
         "likes": 1,
         "retweets": 0,
         "replies": 1,
-        "views": 161832,
+        "views": 166108,
         "tweet_id": "2121204556063183250",
         "created_at": "Fri Nov 13 11:32:30 +0000 2026",
         "lang": "en",
@@ -114,10 +131,10 @@
       "author_name": "Serenity",
       "text": "Following the $MRVL and $LITE acquisition announcement…\n\nSamsung Electronics has been doing vertical integration of their own in photonics to thermal:\n\n- New report from Bloomberg states that \nSamsung Electronics is in talks to buy $MOD Modine.\n\nWhich supplies thermal/cooling infrastructure for AI data centers. \n\n- 2 days ago from Digitimes, Samsung has\npurchased series of silicon photonics patents from Rockley Photonics (that previously was bankrupt). Covering modulators and PICs, mainly around design and integration.\n\nThis follows earlier leaks that “Samsung is reportedly considering acquisitions in the silicon photonics space”\n\nAfter Samsung’s reportedly pursues optical engine and PIC manufacturing by 2027, and CPO services by 2029.\n\nWe’ll likely see this trend accelerate with M&A vertical integration across AI supply chains.\n\nEspecially considering valuations from smaller upstream companies collapsed recently, despite their strategic significance.",
       "time_ago": "1d",
-      "likes": 586,
+      "likes": 590,
       "retweets": 26,
       "replies": 65,
-      "views": 198503,
+      "views": 202131,
       "tweet_id": "2121221289440665737",
       "media": [
         "https://pbs.twimg.com/media/HXAXhDoaEAAH7qr.jpg",
@@ -132,10 +149,10 @@
       "author_name": "Serenity",
       "text": "Just to state the nuances of my opinion: Jensen is irreplaceable to $NVDA.\n\nNo other CEO can visit a chicken shop in Korea, noodle shop in Japan\n\nAnd rally hundred of billions of capital and supply chain commitment into Nvidia’s next technological vision.\n\nAs for Nvidia: the their roadmap is intact, their existing commitment and revenues are still preserved under Jensen’s leadership.\n\nThey’ll still be around 5-10 years from now, given how fundamentally important they are to AI supply chains. \n\nUnder a new leader they can still continue growing if AI demand is intact and maintain their current lines.\n\nBut I don’t know anyone who can possibly think that under anyone else, whether it’s Tim Cook or an accountant:\n\nThat Nvidia could compound 70% capacity constrained growth Y/Y, without a leader like Jensen making these transformational bets.\n\nAs for AI implications:\n\nI’m heavily bullish directionally, given AI is the most transformational technology in human history.\n\n- I expect some potential slowdown in Nvidia’s ecosystem.\n\nI don’t think an accountant can make the same aggressive level of commitments to Neoclouds or supply chains in Taiwan, Korea, Japan beyond existing architectures.\n\nThen rally the capital and trust to make it happen.\n\n- I do expect the next CEO to be more politically aligned with Washington in restricting China GPU access\n\n- I also see the next CEO being less supportive of open weight models (positive for OpenAI/Anthropic)\n\n- I’m less optimistic on $NVDA maintaining their competitive advantages against $AMD, $AVGO, and hyperscalers.\n\nOne person doesn’t break the AI trade, I expect companies from optics to memory to still outperform.\n\nHowever, my confidence in the next leg of Nvidia’s growth, beyond their current roadmap, has been shaken without Jensen Huang.",
       "time_ago": "1d",
-      "likes": 2322,
+      "likes": 2330,
       "retweets": 126,
       "replies": 140,
-      "views": 325508,
+      "views": 331151,
       "tweet_id": "2121203324167037436",
       "quoted_tweet": {
         "author": "@Path21Mil",
@@ -145,7 +162,7 @@
         "likes": 4,
         "retweets": 0,
         "replies": 0,
-        "views": 265433,
+        "views": 270376,
         "tweet_id": "2121182682348700052",
         "created_at": "Fri Nov 13 10:05:35 +0000 2026",
         "lang": "en",
@@ -160,10 +177,10 @@
       "author_name": "Serenity",
       "text": "$SHOP CEO: 今天，真正的 $NVDA 就此终结。\n\n取而代之的，不过是一个披着英伟达外衣、徒有其形的仿冒品。\n\n未来掌舵的，将不再是开创者，而只是一群守成的看管者。他们会竭力守护黄仁勋亲手点燃的那团火焰，却终究无法让它延续下去。 https://t.co/pwmAJx1gdv",
       "time_ago": "1d",
-      "likes": 2216,
+      "likes": 2238,
       "retweets": 142,
-      "replies": 140,
-      "views": 263617,
+      "replies": 142,
+      "views": 268964,
       "tweet_id": "2121182068558446730",
       "media": [
         "https://pbs.twimg.com/media/HW_z2JUbkAAs1ZT.jpg"
@@ -176,10 +193,10 @@
       "author_name": "Serenity",
       "text": "The people have spoken.\n\nIn the largest large-scale poll of 22,965 respondents:\n\n19,750 supported @JensenHuang remaining CEO of $NVDA, compared with just 1,840 opposing him.\n\nAmong respondents expressing a position Jensen received a:\n\n- 91.5% support vs. 8.5% opposition ratio\n(10.8 to 1)\n\nThe results stands in contrast to prominent media commentary calling for and celebrating his departure.\n\nNvidia’s board should reconsider whether removing Jensen Huang was in the best interests of its shareholders and American leadership in AI",
       "time_ago": "1d",
-      "likes": 2239,
+      "likes": 2243,
       "retweets": 163,
-      "replies": 186,
-      "views": 250812,
+      "replies": 187,
+      "views": 254087,
       "tweet_id": "2121148384555995136",
       "media": [
         "https://pbs.twimg.com/media/HW_VNntbkAArlJr.jpg"
@@ -192,7 +209,7 @@
         "likes": 743,
         "retweets": 64,
         "replies": 165,
-        "views": 751607,
+        "views": 755519,
         "tweet_id": "2120822653997261079",
         "created_at": "Thu Nov 12 10:14:58 +0000 2026",
         "lang": "en"
@@ -206,10 +223,10 @@
       "author_name": "Serenity",
       "text": "I’m sorry but why are we letting the future of $NVDA and American semiconductors \n\nBe decided by board members with experience from Taco Bell and the NFL",
       "time_ago": "2d",
-      "likes": 10362,
+      "likes": 10365,
       "retweets": 528,
-      "replies": 408,
-      "views": 604109,
+      "replies": 407,
+      "views": 606329,
       "tweet_id": "2120993521289326858",
       "created_at": "Thu Nov 12 21:33:56 +0000 2026",
       "lang": "en"
@@ -219,10 +236,10 @@
       "author_name": "Serenity",
       "text": "Former $NVDA CEO had a relationship with a second employee per Reuters. \n\nWhat is this timeline https://t.co/aMTgHsPz6V",
       "time_ago": "2d",
-      "likes": 1238,
+      "likes": 1239,
       "retweets": 23,
       "replies": 157,
-      "views": 327820,
+      "views": 329032,
       "tweet_id": "2120964006328566047",
       "media": [
         "https://pbs.twimg.com/media/HW8tHEvbcAAp_hj.jpg"
@@ -268,10 +285,10 @@
       "author_name": "Serenity",
       "text": "$NVDA Jensen Huang has now resigned.\n\nDespite the overwhelming support worldwide and from his employees. \n\nThis is an end of an era for Nvidia. https://t.co/GwtmTgkHBa",
       "time_ago": "2d",
-      "likes": 3339,
-      "retweets": 180,
+      "likes": 3338,
+      "retweets": 179,
       "replies": 343,
-      "views": 453224,
+      "views": 454507,
       "tweet_id": "2120878368975618315",
       "media": [
         "https://pbs.twimg.com/media/HW7fgdCaMAAhEWu.jpg"
@@ -284,7 +301,7 @@
         "likes": 743,
         "retweets": 64,
         "replies": 165,
-        "views": 751607,
+        "views": 755519,
         "tweet_id": "2120822653997261079",
         "created_at": "Thu Nov 12 10:14:58 +0000 2026",
         "lang": "en"
@@ -298,10 +315,10 @@
       "author_name": "Serenity",
       "text": "Regarding $NBIS earnings results:\n\nTo show you how fast they're growing... from Q2 to Q3: \n\nRevenue: $582.3M -> $980.8M (+68% QoQ)\nAdjusted EBITDA: $236.2M -> $465.8M (+97% QoQ)\nAI cloud adj. EBITDA margin: 49.7% -> 53.2%\nNet Income: −$190.4M -> −$37.5M\n\nARR has reached $6.4B at the end of Sep. In terms of management commentary: \n\n- Since start of Q3, Nebius signed $12B+ of new contracts\n- Average GPU pricing rose 20%+ sequentially, payback shortened from 22M -> 19M\n- On Q3 deals, prepayments covered 100% of associated capex, up from 50–60% in Q2 (insane for financing)\n- Contract value per MW exceeded $25M+ from Q3 up from ~$20M Q2 \n- 5GW contracted power year end\n\nWith $10B of committed customer prepayments in 2026 and $17B-$20B in 2027. Now, prepayments and borrowing against existing contracts covers ~75-85% of 2027 capex. \n\nOn subsidiaries:\n1. Avride - 250 autonomous vehicles fleet, over 100,000 passenger rides (with companies like $UBER). Fully driverless robotaxi targeted H1 2027.\n2. Toloka - Revenue doubled sequentially\n3. Enterprise cloud - Databricks and Datadog selected Neibus. Along with a new agreement with Snowflake. \n4. Tavily - Over 3M developers now with $IBM post-training a core partner. \n5. ClickHouse - Nothing about new secondary valuations, but we can see valuations growing\n6. TokenFactory - Contract value grew 17x sequentially\n\nThe primary negative I saw was that 2026 guidance is now on the lower end (near ~$3B), due to $MSFT capacity deliveries slipping to Q2 2027.\n\nApparently there was an execution miss with a third party partner DataOne. Temporary generators were retired amid permitting issues before enough $BE fuel cell capacity came online. \n\nCapex also increased in 2026 from $20B-$25B to $27B, while revising revenue expectations downward. \n\nSo near-term unfortunate headwinds kinda reminiscent of AOI earnings; however long term I think Nebius will take care of you. \n\nFor 2027 outlook:\n- $12-13 billion revenue, capex of $40-45 billion, pre-tax breakeven by the end of 2027.\n\nVery operationally bullish, as seen with prepayments covering capex, GPU premiums increasing. Main downside is near-term execution risk from third parties, causing near-term delays and revenue recognition. \n\nGreat quarter from Nebius overall.",
       "time_ago": "2d",
-      "likes": 1944,
+      "likes": 1947,
       "retweets": 129,
       "replies": 124,
-      "views": 318381,
+      "views": 319628,
       "tweet_id": "2120866647930187882",
       "media": [
         "https://pbs.twimg.com/media/HW7Q25DasAAzKWz.jpg",
@@ -318,7 +335,7 @@
       "likes": 743,
       "retweets": 64,
       "replies": 165,
-      "views": 751607,
+      "views": 755519,
       "tweet_id": "2120822653997261079",
       "created_at": "Thu Nov 12 10:14:58 +0000 2026",
       "lang": "en"
@@ -331,7 +348,7 @@
       "likes": 4979,
       "retweets": 386,
       "replies": 302,
-      "views": 605855,
+      "views": 607393,
       "tweet_id": "2120798356205093139",
       "quoted_tweet": {
         "author": "@DarrynKemper",
@@ -341,7 +358,7 @@
         "likes": 30,
         "retweets": 1,
         "replies": 27,
-        "views": 502198,
+        "views": 503190,
         "tweet_id": "2120794083635479035",
         "created_at": "Thu Nov 12 08:21:26 +0000 2026",
         "lang": "en",
@@ -359,7 +376,7 @@
       "likes": 1022,
       "retweets": 46,
       "replies": 86,
-      "views": 272847,
+      "views": 273579,
       "tweet_id": "2120792625477468583",
       "media": [
         "https://pbs.twimg.com/media/HW6RcIga0AAPiqY.jpg"
@@ -375,7 +392,7 @@
       "likes": 4523,
       "retweets": 220,
       "replies": 374,
-      "views": 530593,
+      "views": 531514,
       "tweet_id": "2120658071274013137",
       "created_at": "Wed Nov 11 23:20:58 +0000 2026",
       "lang": "en"
@@ -388,7 +405,7 @@
       "likes": 893,
       "retweets": 33,
       "replies": 128,
-      "views": 234308,
+      "views": 234977,
       "tweet_id": "2120650676762181843",
       "media": [
         "https://pbs.twimg.com/media/HW4QjMDbQAAa3ju.jpg"
@@ -400,8 +417,8 @@
         "time_ago": "3d",
         "likes": 1922,
         "retweets": 54,
-        "replies": 298,
-        "views": 506678,
+        "replies": 297,
+        "views": 507636,
         "tweet_id": "2120648172192378945",
         "media": [
           "https://pbs.twimg.com/media/HW4ORYsaQAAM9bn.jpg"
@@ -420,8 +437,8 @@
       "time_ago": "3d",
       "likes": 1922,
       "retweets": 54,
-      "replies": 298,
-      "views": 506678,
+      "replies": 297,
+      "views": 507636,
       "tweet_id": "2120648172192378945",
       "media": [
         "https://pbs.twimg.com/media/HW4ORYsaQAAM9bn.jpg"
@@ -437,7 +454,7 @@
       "likes": 1153,
       "retweets": 51,
       "replies": 50,
-      "views": 208480,
+      "views": 208985,
       "tweet_id": "2120575364238094682",
       "media": [
         "https://pbs.twimg.com/media/HW3K-K9aIAAxEM9.jpg"
@@ -450,7 +467,7 @@
         "likes": 39,
         "retweets": 2,
         "replies": 1,
-        "views": 153715,
+        "views": 154091,
         "tweet_id": "1993805622081671250",
         "created_at": "Wed Nov 26 22:14:38 +0000 2025",
         "lang": "en"
@@ -464,10 +481,10 @@
       "author_name": "Serenity",
       "text": "Let's fking go $ANT\n\nThis is how you sell the future of AI... by entering an \"Age of Miracles,\" not human extinction.\n\nI still think Anthropic is overvalued, but even I'm getting hyped by this IPO teaser. https://t.co/ebNkiRoogo",
       "time_ago": "3d",
-      "likes": 2003,
+      "likes": 2006,
       "retweets": 94,
       "replies": 115,
-      "views": 392572,
+      "views": 393876,
       "tweet_id": "2120533451279642808",
       "media": [
         "https://pbs.twimg.com/amplify_video_thumb/2120532324358180866/img/O4iWI4PJxXrfx_UM.jpg",
@@ -478,10 +495,10 @@
         "author_name": "Serenity",
         "text": "$ANT IPO at $1.4T valuation is now multiple times oversubscribed. \n\nAfter trying to raise $57.8–64.4B… pushing total Anthropic IPO funding closer to $100B.\n\nI guess the pool of capital is infinity in America if you can cure cancer with AI in 5–10 years? https://t.co/p62qwYGTMk",
         "time_ago": "3d",
-        "likes": 776,
+        "likes": 778,
         "retweets": 40,
         "replies": 67,
-        "views": 446814,
+        "views": 447841,
         "tweet_id": "2120526218076504318",
         "media": [
           "https://pbs.twimg.com/media/HW2fWsYaQAAgoD-.jpg"
@@ -498,10 +515,10 @@
       "author_name": "Serenity",
       "text": "$ANT IPO at $1.4T valuation is now multiple times oversubscribed. \n\nAfter trying to raise $57.8–64.4B… pushing total Anthropic IPO funding closer to $100B.\n\nI guess the pool of capital is infinity in America if you can cure cancer with AI in 5–10 years? https://t.co/p62qwYGTMk",
       "time_ago": "3d",
-      "likes": 776,
+      "likes": 778,
       "retweets": 40,
       "replies": 67,
-      "views": 446814,
+      "views": 447841,
       "tweet_id": "2120526218076504318",
       "media": [
         "https://pbs.twimg.com/media/HW2fWsYaQAAgoD-.jpg"
@@ -517,17 +534,17 @@
       "likes": 458,
       "retweets": 29,
       "replies": 37,
-      "views": 153829,
+      "views": 154192,
       "tweet_id": "2120523420639408175",
       "quoted_tweet": {
         "author": "@sacsters",
         "author_name": "Sacsters",
         "text": "$sive wait, the WT ($3036.TW) line card is actually nuts! https://t.co/Z858loHJY1",
-        "time_ago": "3d",
-        "likes": 99,
+        "time_ago": "4d",
+        "likes": 100,
         "retweets": 10,
         "replies": 4,
-        "views": 104770,
+        "views": 105014,
         "tweet_id": "2120411221224722880",
         "media": [
           "https://pbs.twimg.com/media/HW01tDfbAAAssM5.png",
@@ -545,10 +562,10 @@
       "author_name": "Serenity",
       "text": "You heard 10x demand for compute > supply from $CRWV today. \n\nHearing from $TSM today on Nikkei Forum: \n\n\"The demand on our leading node [most advanced] silicon is insatiable\"\n\nCustomers \"want to get [their] hands around any compute capability they can have. It's truly an insatiable environment.\"\n\nQ: Whether AI demand was slowing?\nA: \"we did not see any sign of slowdown\"\n\nQ: How demand compared with TSMC’s ability to supply\nA: \"the demand actually is still far above our capability today to supply.\"\n\nTSMC identified power and substrates as bottlenecks customers were encountering. \n\nOn the mid-to-high-50s annualized growth estimate for AI accelerator revenue from 2024 to 2029. Wei said \"it probably will be higher.\"\n\nDescribing things as \"insatiable\" from a traditionally conservative company... doesn't quite look like any collapse in AI demand.",
       "time_ago": "3d",
-      "likes": 885,
+      "likes": 886,
       "retweets": 52,
       "replies": 77,
-      "views": 185528,
+      "views": 185915,
       "tweet_id": "2120488757334044945",
       "media": [
         "https://pbs.twimg.com/media/HW18iEUbgAAnZI_.jpg"
@@ -557,11 +574,11 @@
         "author": "@aleabitoreddit",
         "author_name": "Serenity",
         "text": "$CRWV ER and read through for $NBIS and other Neoclouds:\n\n“We have 10x as much qualified demand as available capacity”.\n\n- interest in 2028 capacity already amounts to several times what CoreWeave has available\n\n-  CoreWeave raised prices by 25% in July, +10% later in Q3, and more to come in Q4\n\n- Ampere and Hopper rental pricing rose 30–50% quarter over quarter (older GPUs)\n\n- better financing conditions (higher prepayments, lower interest 7–7.5% for new loans)\n\n-  positive adjusted net income in the first half of 2028.\n\nSo we’re seeing higher pricing esp. for older GPUs…better financing mechanics, and extreme demand imbalance where you have 10x demand > supply.\n\nSame issues are there for this company in specific with interest rates, but I’d argue other Neoclouds are in a better spot.\n\nBut it’s wild to witness AI infrastructure names crash while demand keeps growing",
-        "time_ago": "3d",
+        "time_ago": "4d",
         "likes": 1548,
         "retweets": 75,
         "replies": 120,
-        "views": 377776,
+        "views": 378302,
         "tweet_id": "2120391635737649423",
         "media": [
           "https://pbs.twimg.com/media/HW0k8-6aAAAeW5y.jpg"
@@ -577,11 +594,11 @@
       "author": "@aleabitoreddit",
       "author_name": "Serenity",
       "text": "$CRWV ER and read through for $NBIS and other Neoclouds:\n\n“We have 10x as much qualified demand as available capacity”.\n\n- interest in 2028 capacity already amounts to several times what CoreWeave has available\n\n-  CoreWeave raised prices by 25% in July, +10% later in Q3, and more to come in Q4\n\n- Ampere and Hopper rental pricing rose 30–50% quarter over quarter (older GPUs)\n\n- better financing conditions (higher prepayments, lower interest 7–7.5% for new loans)\n\n-  positive adjusted net income in the first half of 2028.\n\nSo we’re seeing higher pricing esp. for older GPUs…better financing mechanics, and extreme demand imbalance where you have 10x demand > supply.\n\nSame issues are there for this company in specific with interest rates, but I’d argue other Neoclouds are in a better spot.\n\nBut it’s wild to witness AI infrastructure names crash while demand keeps growing",
-      "time_ago": "3d",
+      "time_ago": "4d",
       "likes": 1548,
       "retweets": 75,
       "replies": 120,
-      "views": 377776,
+      "views": 378302,
       "tweet_id": "2120391635737649423",
       "media": [
         "https://pbs.twimg.com/media/HW0k8-6aAAAeW5y.jpg"
@@ -597,7 +614,7 @@
       "likes": 1691,
       "retweets": 59,
       "replies": 158,
-      "views": 409722,
+      "views": 410126,
       "tweet_id": "2120198265346081174",
       "media": [
         "https://pbs.twimg.com/media/HWx1FVfb0AAKVsm.jpg",
@@ -614,7 +631,7 @@
       "likes": 693,
       "retweets": 35,
       "replies": 69,
-      "views": 271456,
+      "views": 271738,
       "tweet_id": "2120106741090370030",
       "media": [
         "https://pbs.twimg.com/media/HWwh1xVbYAABlYF.jpg",
@@ -628,7 +645,7 @@
         "likes": 711,
         "retweets": 38,
         "replies": 66,
-        "views": 400536,
+        "views": 400839,
         "tweet_id": "2119023086502805730",
         "media": [
           "https://pbs.twimg.com/media/HWhGe13agAAZdWf.jpg",
@@ -640,34 +657,6 @@
       "created_at": "Tue Nov 10 10:50:11 +0000 2026",
       "lang": "en",
       "quoted_status_id": "2119023086502805730"
-    },
-    {
-      "author": "@aleabitoreddit",
-      "author_name": "Serenity",
-      "text": "If you look at CW laser ASPs for AI data centers, the pricing differences are pretty substantial:\n\n70mW: ~$3–4\n100mW: ~$4–6 (Source Photonics channel checks).\n\nWith some premiums apparently going up to $7-$9 range with the recent shortage for pluggables. \n\n120–150mW NPO: ~$15–20\n350mW UHP CW: ~$40 (Nomura)\n400mW UHP CW for NPO/CPO: ~$50–75 (Mizuho)\n\nWith former communication laser chips going from 20-50 cents. \n\nThe pricing and gross margins of these players go up with each architectural shift (60%+ for CPO lasers).\n\nAnd go up even more depending how far down the stack you go (selling ELSFP was ~2.5x revenue content) \n\nIn terms of how I see the landscape now:\n\n- $COHR is probably the best risk adjusted laser player now, for people who don't like uncertainty. Their new $20B LTA is very substantial.\n\n- $LITE pretty negative now given the valuation overhang from $MRVL acquisition. Operationally very opsitive. \n\n- $AAOI has extreme demand visibility (likely $6-$9B in new LTAs from just 1 quarter), but credible execution uncertainty. \n\nThey've also been focusing on pluggables + bottlenecked by DSPs, rather focusing on UHP CPO laser merchant markets. \n\nBut I think if markets see a new $5B-$7B LTA that they're in late stage discussion for... and see the $4.4B MC. Pretty sure that's a catalyst for recovery. \n\nThe demand doesn't disappear but timeline shifts back a few months. \n\nAOI also signaled DSP as the main bottleneck, last quarter it was TIAs, so other different component players that are interesting. \n\n- $SIVE has extreme capacity expansion (300m laser capacity targeted in total). \n\nThe economic implications that they won't disclose are likely enormous relative to their MC, even if they sell $3 70mW lasers to China pluggable players. \n\nBut there's a qualification uncertainty to fill the gap, \nthat markets have punished the company for. Especially when management communication amplifies uncertainty, despite the ongoing shortage. \n\nRight now entire AI trade is going up and down together though.",
-      "time_ago": "4d",
-      "likes": 731,
-      "retweets": 51,
-      "replies": 67,
-      "views": 230722,
-      "tweet_id": "2120074819878449605",
-      "quoted_tweet": {
-        "author": "@HabeshaTechBro",
-        "author_name": "Habesha Tech Bro",
-        "text": "One nuance worth adding for the semi specialists reading the $AAOI section:\n\nThe 720M to 1.44B annual diode figure off the 180,000/year Yunnan Germanium 4-inch wafer contract reflects gross standard pluggable die candidates. Once you apply real-world III-V epitaxy,facet-coating, and 5,000-hour burn-in yields (~45% to 55% net known-good dies), factor in dual-use export license buffers, and account for the ~5x die-area penalty on 300mW to 400mW CPO cavities, $AAOI's net shippable output scales toward ~180M to 300M+ high-speed lasers per year as Texas Phase 2 ramps.\n\nRoughly 80M to 95M of those net dies get absorbed internally just feeding $AAOI's 1M/month transceiver target, leaving ~100M to 200M+ merchant diodes for external buyers inside a 650M to 1B+ combined scale-out and scale-up market. Even if both $AAOI and $SIVE hit full utilization in 2028, merchant Western supply stays structurally short.",
-        "time_ago": "4d",
-        "likes": 44,
-        "retweets": 5,
-        "replies": 1,
-        "views": 152773,
-        "tweet_id": "2120039468170133699",
-        "created_at": "Tue Nov 10 06:22:52 +0000 2026",
-        "lang": "en",
-        "in_reply_to_status_id": "2120034199126122795"
-      },
-      "created_at": "Tue Nov 10 08:43:20 +0000 2026",
-      "lang": "en",
-      "quoted_status_id": "2120039468170133699"
     }
   ]
 }
